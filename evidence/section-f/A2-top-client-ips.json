@@ -1,0 +1,34 @@
+{
+    "queryLanguage": "CWLI",
+    "results": [
+        [
+            {
+                "field": "clientIp",
+                "value": "165.22.72.144"
+            },
+            {
+                "field": "hits",
+                "value": "1"
+            }
+        ],
+        [
+            {
+                "field": "clientIp",
+                "value": "185.16.39.146"
+            },
+            {
+                "field": "hits",
+                "value": "1"
+            }
+        ]
+    ],
+    "statistics": {
+        "recordsMatched": 2.0,
+        "recordsScanned": 2.0,
+        "estimatedRecordsSkipped": 0.0,
+        "bytesScanned": 2580.0,
+        "estimatedBytesSkipped": 0.0,
+        "logGroupsScanned": 1.0
+    },
+    "status": "Complete"
+}

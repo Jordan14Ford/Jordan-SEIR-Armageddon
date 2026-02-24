@@ -1,0 +1,11 @@
+{
+    "LoggingConfiguration": {
+        "ResourceArn": "arn:aws:wafv2:us-east-1:583001104385:regional/webacl/cloudyjones-webacl01/ab4b6fb3-23c6-408d-badd-77d657190974",
+        "LogDestinationConfigs": [
+            "arn:aws:logs:us-east-1:583001104385:log-group:aws-waf-logs-cloudyjones-webacl01"
+        ],
+        "ManagedByFirewallManager": false,
+        "LogType": "WAF_LOGS",
+        "LogScope": "CUSTOMER"
+    }
+}
