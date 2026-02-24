@@ -1,0 +1,1 @@
+{"timestamp":"2026-02-17T02:48:13Z","region":"us-east-1","ec2_instance":"i-044e3e19e1b267d1e","ec2_sg":"sg-04b5ded2e787fd2cf","rds_instance":"lab1a-mysql-db","rds_sg":"sg-0f17d1eded3a2a9ab","engine":"mysql","db_port":3306,"caller_arn":"arn:aws:iam::583001104385:user/AWSCLI","result":"PASS"}

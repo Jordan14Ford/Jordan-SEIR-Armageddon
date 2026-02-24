@@ -1,0 +1,12 @@
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "Lab1A-SecretsManager-Policy",
+            "PolicyArn": "arn:aws:iam::583001104385:policy/Lab1A-SecretsManager-Policy"
+        },
+        {
+            "PolicyName": "AmazonSSMManagedInstanceCore",
+            "PolicyArn": "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+        }
+    ]
+}
