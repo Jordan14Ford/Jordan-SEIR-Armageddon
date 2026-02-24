@@ -1,0 +1,61 @@
+{
+    "WebACL": {
+        "Name": "cloudyjones-webacl01",
+        "Id": "ab4b6fb3-23c6-408d-badd-77d657190974",
+        "ARN": "arn:aws:wafv2:us-east-1:583001104385:regional/webacl/cloudyjones-webacl01/ab4b6fb3-23c6-408d-badd-77d657190974",
+        "DefaultAction": {
+            "Allow": {}
+        },
+        "Description": "WAF for cloudyjones ALB",
+        "Rules": [
+            {
+                "Name": "AWSManagedRulesCommonRuleSet",
+                "Priority": 1,
+                "Statement": {
+                    "ManagedRuleGroupStatement": {
+                        "VendorName": "AWS",
+                        "Name": "AWSManagedRulesCommonRuleSet"
+                    }
+                },
+                "OverrideAction": {
+                    "None": {}
+                },
+                "VisibilityConfig": {
+                    "SampledRequestsEnabled": true,
+                    "CloudWatchMetricsEnabled": true,
+                    "MetricName": "AWSManagedRulesCommonRuleSet"
+                }
+            },
+            {
+                "Name": "AWSManagedRulesKnownBadInputsRuleSet",
+                "Priority": 2,
+                "Statement": {
+                    "ManagedRuleGroupStatement": {
+                        "VendorName": "AWS",
+                        "Name": "AWSManagedRulesKnownBadInputsRuleSet"
+                    }
+                },
+                "OverrideAction": {
+                    "None": {}
+                },
+                "VisibilityConfig": {
+                    "SampledRequestsEnabled": true,
+                    "CloudWatchMetricsEnabled": true,
+                    "MetricName": "AWSManagedRulesKnownBadInputsRuleSet"
+                }
+            }
+        ],
+        "VisibilityConfig": {
+            "SampledRequestsEnabled": true,
+            "CloudWatchMetricsEnabled": true,
+            "MetricName": "cloudyjones-webacl01"
+        },
+        "Capacity": 900,
+        "ManagedByFirewallManager": false,
+        "LabelNamespace": "awswaf:583001104385:webacl:cloudyjones-webacl01:",
+        "RetrofittedByFirewallManager": false,
+        "OnSourceDDoSProtectionConfig": {
+            "ALBLowReputationMode": "ACTIVE_UNDER_DDOS"
+        }
+    }
+}

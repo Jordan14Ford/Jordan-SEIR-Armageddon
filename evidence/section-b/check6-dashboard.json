@@ -1,0 +1,10 @@
+{
+    "DashboardEntries": [
+        {
+            "DashboardName": "cloudyjones-dashboard01",
+            "DashboardArn": "arn:aws:cloudwatch::583001104385:dashboard/cloudyjones-dashboard01",
+            "LastModified": "2026-02-23T11:45:34-05:00",
+            "Size": 1131
+        }
+    ]
+}

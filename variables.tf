@@ -27,3 +27,21 @@ variable "private_subnet_cidrs" {
   type        = list(string)
   default     = ["10.0.11.0/24", "10.0.12.0/24"]
 }
+
+variable "alert_email" {
+  description = "Email address for SNS alerts."
+  type        = string
+  default     = "jordanxavi95@gmail.com"
+}
+
+variable "domain_name" {
+  description = "Root domain name."
+  type        = string
+  default     = "cloudyjones.xyz"
+}
+
+variable "app_subdomain" {
+  description = "Subdomain for the app."
+  type        = string
+  default     = "app"
+}
