@@ -1,0 +1,77 @@
+{
+    "SecurityGroups": [
+        {
+            "GroupId": "sg-04b5ded2e787fd2cf",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ],
+            "VpcId": "vpc-0df82350861e1de16",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:583001104385:security-group/sg-04b5ded2e787fd2cf",
+            "OwnerId": "583001104385",
+            "GroupName": "labA-ec2-lab",
+            "Description": "Security group for Lab 1A EC2 instance",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ]
+        },
+        {
+            "GroupId": "sg-0f17d1eded3a2a9ab",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "UserIdGroupPairs": [],
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ],
+            "VpcId": "vpc-0df82350861e1de16",
+            "SecurityGroupArn": "arn:aws:ec2:us-east-1:583001104385:security-group/sg-0f17d1eded3a2a9ab",
+            "OwnerId": "583001104385",
+            "GroupName": "labA-rds-lab",
+            "Description": "Security group for Lab 1A RDS instance",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 3306,
+                    "ToPort": 3306,
+                    "UserIdGroupPairs": [
+                        {
+                            "UserId": "583001104385",
+                            "GroupId": "sg-04b5ded2e787fd2cf"
+                        }
+                    ],
+                    "IpRanges": [],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": []
+                }
+            ]
+        }
+    ]
+}
