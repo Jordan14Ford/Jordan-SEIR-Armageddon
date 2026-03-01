@@ -1,12 +1,24 @@
-# Security group for VPC Interface Endpoints
-# Allows HTTPS from private subnets only
+# ============================================================
+# endpoints.tf — VPC Interface Endpoints
+#
+# key insight: private EC2 has no internet route, so it can't
+# reach AWS APIs the normal way. VPC endpoints create a private
+# path directly into AWS services without leaving the VPC.
+#
+# interface endpoints = ENI in your subnet, costs ~$0.01/hr each
+# gateway endpoints = route table entry, free (S3 only)
+# ============================================================
+
+# endpoint SG — only allows HTTPS from private subnet CIDRs
+# the EC2 instance calls the endpoint over port 443
+# no need to open this to the public subnets
 resource "aws_security_group" "cloudyjones_endpoint_sg01" {
   name        = "${var.project}-endpoint-sg01"
-  description = "Security group for VPC Interface Endpoints"
+  description = "Allow HTTPS from private subnets to VPC endpoints"
   vpc_id      = aws_vpc.cloudyjones_vpc01.id
 
   ingress {
-    description = "HTTPS from private subnets"
+    description = "HTTPS from private subnets only"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -26,14 +38,15 @@ resource "aws_security_group" "cloudyjones_endpoint_sg01" {
   }
 }
 
-# SSM endpoint — required for Session Manager
+# SSM endpoint — this is what lets Session Manager connect to the instance
+# without it, ssm start-session fails with a connection timeout
 resource "aws_vpc_endpoint" "cloudyjones_ssm" {
   vpc_id              = aws_vpc.cloudyjones_vpc01.id
   service_name        = "com.amazonaws.${var.aws_region}.ssm"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = aws_subnet.cloudyjones_private_subnets[*].id
   security_group_ids  = [aws_security_group.cloudyjones_endpoint_sg01.id]
-  private_dns_enabled = true
+  private_dns_enabled = true  # resolves ssm.us-east-1.amazonaws.com locally
 
   tags = {
     Name    = "${var.project}-ssm-endpoint"
@@ -41,7 +54,8 @@ resource "aws_vpc_endpoint" "cloudyjones_ssm" {
   }
 }
 
-# EC2Messages endpoint — required for Session Manager
+# EC2Messages + SSMMessages — both required for SSM Session Manager
+# learned this the hard way: ssm endpoint alone isn't enough
 resource "aws_vpc_endpoint" "cloudyjones_ec2messages" {
   vpc_id              = aws_vpc.cloudyjones_vpc01.id
   service_name        = "com.amazonaws.${var.aws_region}.ec2messages"
@@ -56,7 +70,6 @@ resource "aws_vpc_endpoint" "cloudyjones_ec2messages" {
   }
 }
 
-# SSMMessages endpoint — required for Session Manager
 resource "aws_vpc_endpoint" "cloudyjones_ssmmessages" {
   vpc_id              = aws_vpc.cloudyjones_vpc01.id
   service_name        = "com.amazonaws.${var.aws_region}.ssmmessages"
@@ -71,7 +84,8 @@ resource "aws_vpc_endpoint" "cloudyjones_ssmmessages" {
   }
 }
 
-# CloudWatch Logs endpoint — log shipping without internet
+# CloudWatch Logs endpoint — Flask app logs ship here via the agent
+# without this, log groups never receive data from the private instance
 resource "aws_vpc_endpoint" "cloudyjones_logs" {
   vpc_id              = aws_vpc.cloudyjones_vpc01.id
   service_name        = "com.amazonaws.${var.aws_region}.logs"
@@ -86,7 +100,8 @@ resource "aws_vpc_endpoint" "cloudyjones_logs" {
   }
 }
 
-# Secrets Manager endpoint — credential retrieval without internet
+# Secrets Manager endpoint — app fetches DB credentials here at runtime
+# this is the secure pattern: no hardcoded creds in code or env vars
 resource "aws_vpc_endpoint" "cloudyjones_secretsmanager" {
   vpc_id              = aws_vpc.cloudyjones_vpc01.id
   service_name        = "com.amazonaws.${var.aws_region}.secretsmanager"
@@ -101,7 +116,9 @@ resource "aws_vpc_endpoint" "cloudyjones_secretsmanager" {
   }
 }
 
-# S3 Gateway endpoint — free, no SG needed, handles yum/package repos
+# S3 Gateway endpoint — free, no hourly charge unlike interface endpoints
+# routes S3 traffic through AWS backbone instead of internet
+# also needed for yum package installs on Amazon Linux (yum repos are on S3)
 resource "aws_vpc_endpoint" "cloudyjones_s3" {
   vpc_id            = aws_vpc.cloudyjones_vpc01.id
   service_name      = "com.amazonaws.${var.aws_region}.s3"

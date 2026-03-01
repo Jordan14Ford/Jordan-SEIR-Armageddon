@@ -1,11 +1,21 @@
-# Security group for ALB — public facing
+# ============================================================
+# alb.tf — Application Load Balancer, target group, listeners,
+# SNS alerting, and CloudWatch dashboard
+#
+# traffic flow: internet → ALB (public subnets) → private EC2
+# HTTP on port 80 gets redirected to HTTPS 443 automatically
+# ============================================================
+
+# ALB security group — open to internet on 80 and 443
+# this is intentional, ALB is the public entry point
+# EC2 security group only allows traffic FROM this SG, not from internet
 resource "aws_security_group" "cloudyjones_alb_sg01" {
   name        = "${var.project}-alb-sg01"
-  description = "Security group for ALB"
+  description = "Allow HTTP and HTTPS from internet to ALB"
   vpc_id      = aws_vpc.cloudyjones_vpc01.id
 
   ingress {
-    description = "HTTP from internet"
+    description = "HTTP from internet - redirects to HTTPS"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -33,6 +43,9 @@ resource "aws_security_group" "cloudyjones_alb_sg01" {
   }
 }
 
+# ALB — internet-facing, spans both public subnets across AZs
+# access_logs block ships every request to S3 for audit trail
+# depends on the S3 bucket in logs.tf being created first
 resource "aws_lb" "cloudyjones_alb01" {
   name               = "${var.project}-alb01"
   internal           = false
@@ -52,7 +65,8 @@ resource "aws_lb" "cloudyjones_alb01" {
   }
 }
 
-# Target group — points to private EC2 on port 80
+# target group — ALB forwards traffic here, health check hits /health
+# unhealthy_threshold = 3 means 3 failed checks before marking unhealthy
 resource "aws_lb_target_group" "cloudyjones_tg01" {
   name     = "${var.project}-tg01"
   port     = 80
@@ -74,14 +88,15 @@ resource "aws_lb_target_group" "cloudyjones_tg01" {
   }
 }
 
-# Register private EC2 as target
+# register the private EC2 as the target on port 80
 resource "aws_lb_target_group_attachment" "cloudyjones_tg_attachment01" {
   target_group_arn = aws_lb_target_group.cloudyjones_tg01.arn
   target_id        = aws_instance.cloudyjones_ec201_private.id
   port             = 80
 }
 
-# HTTP listener — redirects to HTTPS
+# HTTP listener — any request on port 80 gets a 301 redirect to HTTPS
+# this ensures all traffic is encrypted in transit
 resource "aws_lb_listener" "cloudyjones_http_listener01" {
   load_balancer_arn = aws_lb.cloudyjones_alb01.arn
   port              = 80
@@ -97,7 +112,7 @@ resource "aws_lb_listener" "cloudyjones_http_listener01" {
   }
 }
 
-# SNS topic for alerts
+# SNS topic — alarm notifications go here, then fan out to email
 resource "aws_sns_topic" "cloudyjones_sns_topic01" {
   name = "${var.project}-sns-topic01"
 
@@ -107,14 +122,15 @@ resource "aws_sns_topic" "cloudyjones_sns_topic01" {
   }
 }
 
-# SNS email subscription
+# email subscription — you have to confirm this in your inbox after apply
 resource "aws_sns_topic_subscription" "cloudyjones_sns_email01" {
   topic_arn = aws_sns_topic.cloudyjones_sns_topic01.arn
   protocol  = "email"
   endpoint  = var.alert_email
 }
 
-# CloudWatch alarm — fires on ALB 5xx spike
+# CloudWatch alarm — triggers when ALB returns 10+ 5xx errors in 2 minutes
+# fires to SNS which sends an email alert
 resource "aws_cloudwatch_metric_alarm" "cloudyjones_alb_5xx" {
   alarm_name          = "${var.project}-alb-5xx"
   comparison_operator = "GreaterThanThreshold"
@@ -124,7 +140,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudyjones_alb_5xx" {
   period              = 60
   statistic           = "Sum"
   threshold           = 10
-  alarm_description   = "ALB 5xx error spike"
+  alarm_description   = "ALB returning 5xx errors - check target health and app logs"
   alarm_actions       = [aws_sns_topic.cloudyjones_sns_topic01.arn]
 
   dimensions = {
@@ -137,7 +153,9 @@ resource "aws_cloudwatch_metric_alarm" "cloudyjones_alb_5xx" {
   }
 }
 
-# CloudWatch Dashboard
+# CloudWatch dashboard — 4 widgets showing key ALB metrics
+# request count, 5xx errors, healthy host count, response time
+# useful for spotting issues at a glance without digging through logs
 resource "aws_cloudwatch_dashboard" "cloudyjones_dashboard01" {
   dashboard_name = "${var.project}-dashboard01"
 

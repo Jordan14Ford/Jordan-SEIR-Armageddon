@@ -1,4 +1,13 @@
-# IAM role for private EC2
+# ============================================================
+# ec2.tf — private EC2 instance with IAM role, security group,
+# and Flask app deployed via user_data
+#
+# key pattern: no public IP, no SSH, no key pair
+# only access method is SSM Session Manager via VPC endpoints
+# ============================================================
+
+# IAM role — EC2 assumes this role at launch
+# trust policy says only EC2 service can assume it
 resource "aws_iam_role" "cloudyjones_ec2_role01" {
   name = "${var.project}-ec2-role01"
 
@@ -17,19 +26,22 @@ resource "aws_iam_role" "cloudyjones_ec2_role01" {
   }
 }
 
-# SSM managed policy — enables Session Manager access
+# AWS managed policy for SSM Session Manager
+# gives the instance permission to register with SSM and accept sessions
 resource "aws_iam_role_policy_attachment" "cloudyjones_ssm_policy" {
   role       = aws_iam_role.cloudyjones_ec2_role01.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-# CloudWatch agent policy — enables log shipping
+# AWS managed policy for CloudWatch agent
+# allows the instance to ship logs and metrics to CloudWatch
 resource "aws_iam_role_policy_attachment" "cloudyjones_cw_policy" {
   role       = aws_iam_role.cloudyjones_ec2_role01.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
-# Least privilege — Secrets Manager: only your specific secret
+# least privilege: only allow access to the specific secret this app needs
+# using a wildcard on the secret name suffix because AWS appends a random string
 resource "aws_iam_role_policy" "cloudyjones_secrets_policy" {
   name = "${var.project}-secrets-policy"
   role = aws_iam_role.cloudyjones_ec2_role01.id
@@ -44,7 +56,8 @@ resource "aws_iam_role_policy" "cloudyjones_secrets_policy" {
   })
 }
 
-# Least privilege — Parameter Store: only your specific path
+# least privilege: only allow reads from /lab/rds/* parameter path
+# not giving access to all SSM parameters, just what the app needs
 resource "aws_iam_role_policy" "cloudyjones_ssm_params_policy" {
   name = "${var.project}-ssm-params-policy"
   role = aws_iam_role.cloudyjones_ec2_role01.id
@@ -59,21 +72,23 @@ resource "aws_iam_role_policy" "cloudyjones_ssm_params_policy" {
   })
 }
 
-# Instance profile — attaches role to EC2
+# instance profile wraps the role so EC2 can use it
+# EC2 can't use an IAM role directly, needs the profile as a container
 resource "aws_iam_instance_profile" "cloudyjones_ec2_profile01" {
   name = "${var.project}-ec2-profile01"
   role = aws_iam_role.cloudyjones_ec2_role01.name
 }
 
-# Security group for private EC2
+# EC2 security group — only allows port 80 from within the VPC
+# ALB forwards traffic here after terminating TLS
+# no SSH port open, no public access
 resource "aws_security_group" "cloudyjones_ec2_sg01" {
   name        = "${var.project}-ec2-sg01"
-  description = "Security group for private EC2 instance"
+  description = "Allow HTTP from VPC only - ALB forwards here"
   vpc_id      = aws_vpc.cloudyjones_vpc01.id
 
-  # HTTP from within VPC only (ALB will forward here)
   ingress {
-    description = "HTTP from VPC"
+    description = "HTTP from VPC - ALB sends traffic here"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -93,7 +108,8 @@ resource "aws_security_group" "cloudyjones_ec2_sg01" {
   }
 }
 
-# Latest Amazon Linux 2023 AMI
+# get the latest Amazon Linux 2023 AMI dynamically
+# this avoids hardcoding an AMI ID that gets stale over time
 data "aws_ami" "amazon_linux_2023" {
   most_recent = true
   owners      = ["amazon"]
@@ -104,18 +120,18 @@ data "aws_ami" "amazon_linux_2023" {
   }
 }
 
-# Current account ID — used in IAM policy ARNs
 data "aws_caller_identity" "current" {}
 
-# Private EC2 — no public IP, SSM only
+# private EC2 — no public IP, no key pair, SSM only
+# user_data installs Flask app and sets it up as a systemd service
+# note: pip3 install will fail if run before VPC endpoints are up
+# if Flask doesn't start, check: sudo systemctl status flask-app
 resource "aws_instance" "cloudyjones_ec201_private" {
-  ami                    = data.aws_ami.amazon_linux_2023.id
-  instance_type          = "t3.micro"
-  subnet_id              = aws_subnet.cloudyjones_private_subnets[0].id
-  iam_instance_profile   = aws_iam_instance_profile.cloudyjones_ec2_profile01.name
-  vpc_security_group_ids = [aws_security_group.cloudyjones_ec2_sg01.id]
-
-  # No public IP — private only
+  ami                         = data.aws_ami.amazon_linux_2023.id
+  instance_type               = "t3.micro"
+  subnet_id                   = aws_subnet.cloudyjones_private_subnets[0].id
+  iam_instance_profile        = aws_iam_instance_profile.cloudyjones_ec2_profile01.name
+  vpc_security_group_ids      = [aws_security_group.cloudyjones_ec2_sg01.id]
   associate_public_ip_address = false
 
   user_data = <<-EOF
