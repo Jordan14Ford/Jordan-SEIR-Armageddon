@@ -1,0 +1,26 @@
+DATA RESIDENCY PROOF — Lab 3
+Captured: 2026-03-16
+Method: AWS CLI against live environment
+
+CLAIM: PHI at rest exists only in Tokyo (ap-northeast-1).
+No RDS instances exist outside Japan.
+
+Tokyo (ap-northeast-1) — RDS present:
+-----------------------------------------------------------------------
+|                         DescribeDBInstances                         |
++-------------------+------------+-------+--------+-------------------+
+|  lab3-tokyo-mysql |  available |  True |  False |  ap-northeast-1c  |
++-------------------+------------+-------+--------+-------------------+
+Columns: DBInstanceIdentifier | Status | StorageEncrypted | PubliclyAccessible | AZ
+
+São Paulo (sa-east-1) — RDS present:
+(none — no output returned)
+
+Osaka (ap-northeast-3) — RDS present:
+(none — no output returned)
+
+VERDICT: PASS
+- RDS exists only in ap-northeast-1 (Japan)
+- Storage is encrypted at rest
+- Instance is not publicly accessible
+- No RDS in São Paulo or Osaka — stateless compute confirmed

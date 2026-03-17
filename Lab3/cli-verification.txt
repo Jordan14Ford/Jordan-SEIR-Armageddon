@@ -1,0 +1,107 @@
+# Lab 3 — CLI Verification Output
+# Run date: 2026-03-15
+# Environment: Paused (RDS stopped, EC2 stopped, NAT gateways deleted)
+
+================================================================================
+SECTION 1 — DATABASE VERIFICATION
+================================================================================
+
+--- Tokyo (ap-northeast-1) ---
+aws rds describe-db-instances --region ap-northeast-1
+
+Result: 1 instance
+  DBInstanceIdentifier: lab3-tokyo-mysql
+  DBInstanceStatus: stopped
+  Engine: mysql 8.0.44
+  PubliclyAccessible: false
+  StorageEncrypted: true
+  MultiAZ: false
+  ReadReplicaDBInstanceIdentifiers: []
+  AvailabilityZone: ap-northeast-1c
+  Endpoint: lab3-tokyo-mysql.clyg202mw62j.ap-northeast-1.rds.amazonaws.com:3306
+  Tags: Compliance=APPI, DataTier=primary, Name=lab3-tokyo-mysql
+
+--- São Paulo (sa-east-1) ---
+aws rds describe-db-instances --region sa-east-1
+
+Result: DBInstances: []
+
+--- Osaka (ap-northeast-3) ---
+aws rds describe-db-instances --region ap-northeast-3
+
+Result: DBInstances: []
+
+================================================================================
+SECTION 2 — TRANSIT GATEWAY
+================================================================================
+
+Tokyo TGW (ap-northeast-1):
+  TransitGatewayId: tgw-07c760214412bf700
+  State: available
+  Description: Lab 3 Tokyo TGW
+  AmazonSideAsn: 64512
+
+São Paulo TGW (sa-east-1):
+  TransitGatewayId: tgw-0ba2e4a991b66f7b0
+  State: available
+  Description: Sao Paulo Transit Gateway for Lab 3
+  AmazonSideAsn: 64513
+
+Osaka TGW (ap-northeast-3):
+  TransitGatewayId: tgw-0f398231e117b7e30
+  State: available
+  Description: Osaka TGW for Tokyo failover
+  AmazonSideAsn: 64514
+
+Tokyo TGW attachments (ap-northeast-1):
+  - tgw-attach-069c3589989778681  peering  ResourceId=tgw-0ba2e4a991b66f7b0  State=available  (to São Paulo)
+  - tgw-attach-0ab9a7e2ac5e244bd peering  ResourceId=tgw-0f398231e117b7e30  State=available  (to Osaka)
+  - tgw-attach-0d64921cf0fd1e299 vpc      ResourceId=vpc-0686276a78477bd46  State=available  (Tokyo VPC)
+
+São Paulo TGW attachments (sa-east-1):
+  - tgw-attach-069c3589989778681  peering  ResourceId=tgw-07c760214412bf700  State=available  (to Tokyo)
+  - tgw-attach-0181bf9656173ff15  vpc      ResourceId=vpc-00b1e4ecab7b37115  State=available  (São Paulo VPC)
+
+================================================================================
+SECTION 3 — ROUTE TABLES (PRIVATE)
+================================================================================
+
+Tokyo private route table (rtb-0e65df33620674839):
+  Destination      Target                    State
+  10.0.0.0/16      local                     active
+  10.2.0.0/16      tgw-07c760214412bf700    active
+  0.0.0.0/0        nat-03a086f5e39e3ab4a    blackhole (NAT deleted)
+
+Note: 10.1.0.0/16 -> TGW is in Terraform but missing from live table; re-apply Tokyo routes after resume if needed.
+
+São Paulo private route table (rtb-0978dd3df558e74a8):
+  Destination      Target                    State
+  10.0.0.0/16      tgw-0ba2e4a991b66f7b0    active
+  10.1.0.0/16      local                     active
+  0.0.0.0/0        nat-0b214b63a002d2ea4    (NAT deleted - blackhole when checked)
+
+Osaka private route table (rtb-08a6e8298a1613692):
+  Destination      Target                    State
+  10.2.0.0/16      local                     active
+  0.0.0.0/0        nat-0b842685552a33035     (NAT deleted - blackhole when checked)
+
+Note: Osaka private RT has no 10.0.0.0/16 -> TGW in this output; verify with terraform plan after resume.
+
+================================================================================
+SECTION 4 — SECURITY (TOKYO RDS SG)
+================================================================================
+
+aws ec2 describe-security-groups --region ap-northeast-1 (lab3-tokyo-rds-sg)
+
+RDS SG: sg-045d82a2ddec9f13f (lab3-tokyo-rds-sg)
+
+Inbound rules (port 3306):
+  - From Tokyo EC2 SG (sg-0336d8660c8c5cac2): "MySQL from Tokyo EC2"
+  - From 10.1.0.0/16: "MySQL from Sao Paulo VPC via TGW"
+  - From 10.2.0.0/16: "MySQL from Osaka VPC via TGW (failover)"
+
+No 0.0.0.0/0 on 3306. PASS.
+
+================================================================================
+END OF CLI VERIFICATION
+================================================================================

@@ -1,0 +1,17 @@
+# Lab 3 — Logs
+
+**Date:** 2026-03-15  
+**State:** Verification run during cost pause (EC2/RDS stopped)
+
+---
+
+Ran verification audit via AWS CLI — RDS, TGW attachments, route tables, security groups. No application or CloudWatch logs captured since the environment was paused.
+
+## Where to find logs when the environment is up
+
+- **CloudTrail** — infra changes (TGW, RDS, routes, security groups)
+- **Application** — Flask logs on EC2 via systemd: `journalctl -u flask.service` or `/var/log/flask.log` if configured with the CloudWatch agent
+- **ALB** — access logs to S3 if enabled in the ALB attributes
+- **RDS** — CloudWatch metrics and optionally Performance Insights
+
+For this lab the primary evidence is `audit-pack/04_cloudtrail-change-proof.txt` and the CLI outputs in the other audit-pack files.

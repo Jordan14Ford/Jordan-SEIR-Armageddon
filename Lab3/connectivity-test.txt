@@ -1,0 +1,47 @@
+# Lab 3 — Connectivity Test
+
+**Date:** 2026-03-15  
+**Status:** Not executed — environment paused.
+
+---
+
+## Intended Test (Section 5)
+
+From a São Paulo EC2 instance, verify application can reach Tokyo RDS:
+
+  nc -vz lab3-tokyo-mysql.clyg202mw62j.ap-northeast-1.rds.amazonaws.com 3306
+
+**What this proves:** That São Paulo app tier can establish TCP to Tokyo RDS over the TGW corridor (private path), not the public internet.
+
+---
+
+## Why Not Run Now
+
+- EC2 instances (Tokyo, São Paulo, Osaka) are **stopped** (see notes/paused_resources_2026-03-14.md).
+- Tokyo RDS is **stopped**.
+- NAT gateways are **deleted**; private instances have no outbound path until NAT is recreated.
+
+So:
+1. Start RDS and EC2s per the pause doc.
+2. Recreate NAT gateways and update route tables if needed.
+3. Then run the nc command above from the São Paulo instance (e.g. via SSM Session Manager).
+
+---
+
+## Previous Verification (When Live)
+
+When the environment was last up, São Paulo ALB was tested:
+
+  curl http://<sao-paulo-alb-dns>/
+
+Response included:
+  "db_host": "lab3-tokyo-mysql.clyg202mw62j.ap-northeast-1.rds.amazonaws.com"
+  "note": "This app connects to Tokyo RDS over TGW"
+
+That confirms the app was configured to use Tokyo RDS and the TGW corridor was in use.
+
+---
+
+## Recommendation
+
+After resume: run nc from São Paulo EC2 to Tokyo RDS endpoint on 3306 and paste the result here for a complete connectivity proof.

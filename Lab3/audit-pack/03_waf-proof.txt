@@ -1,0 +1,29 @@
+LAB 3 — WAF PROOF
+
+================================================================================
+STATUS: LIVE EVIDENCE — captured 2026-03-16
+================================================================================
+
+WAF WEB ACL — Live
+Name:     lab3-waf-acl
+ID:       9a2f2c08-c9bb-45f8-9905-0027fe139d66
+ARN:      arn:aws:wafv2:us-east-1:583001104385:global/webacl/lab3-waf-acl/9a2f2c08-c9bb-45f8-9905-0027fe139d66
+Scope:    CLOUDFRONT
+Region:   us-east-1 (required by AWS for CloudFront WAF)
+
+Managed rule groups deployed:
+1. AWSManagedRulesCommonRuleSet (priority 1)
+   Blocks: SQL injection, XSS, path traversal, malformed HTTP (OWASP Top 10)
+2. AWSManagedRulesAmazonIpReputationList (priority 2)
+   Blocks: known malicious IPs, botnets, scrapers, DDoS infrastructure
+
+WAF attached to CloudFront distribution:
+aws cloudfront get-distribution --id E21VKJX8IT4I09 \
+  --query 'Distribution.DistributionConfig.WebACLId' --output text
+Response: arn:aws:wafv2:us-east-1:583001104385:global/webacl/lab3-waf-acl/9a2f2c08-c9bb-45f8-9905-0027fe139d66
+
+VERDICT: PASS
+- WAF WebACL deployed in us-east-1 with CLOUDFRONT scope
+- Two managed rule groups active — OWASP Top 10 + IP reputation
+- WAF ARN confirmed attached to distribution E21VKJX8IT4I09
+- All requests inspected at edge before reaching Tokyo origin
