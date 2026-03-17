@@ -1,0 +1,12 @@
+HTTP/2 500 
+content-type: application/json
+content-length: 127
+date: Tue, 17 Mar 2026 12:58:08 GMT
+cache-control: private, no-store
+server: Werkzeug/3.1.6 Python/3.9.25
+x-cache: Error from cloudfront
+via: 1.1 b4011ac432e4f034161d5cccc8a4ac80.cloudfront.net (CloudFront)
+x-amz-cf-pop: IAD61-P10
+x-amz-cf-id: y4EoqCLscR14Xn5JLxc1ud2hebwTF-4IySrcJizYh1SUfY9Q60NMXw==
+
+{"error":"(2003, \"Can't connect to MySQL server on 'lab1a-mysql-db.cenw8ykkspmw.us-east-1.rds.amazonaws.com' (timed out)\")"}

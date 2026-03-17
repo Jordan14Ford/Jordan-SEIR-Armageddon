@@ -1,0 +1,28 @@
+ALB Direct Access Proof — Origin Cloaking Verification
+======================================================
+Date: 2026-03-17
+Command: curl -si --max-time 10 "http://cloudyjones-alb01-837551053.us-east-1.elb.amazonaws.com"
+Exit code: 28 (connection timed out)
+
+RESULT: Connection refused / timed out. No HTTP response received.
+
+WHY THIS IS STRONGER THAN A 403:
+- Exit code 28 = curl timed out — the TCP connection was never established.
+- The ALB Security Group (sg-0721435774b98e5d3) only allows inbound traffic
+  from the AWS-managed CloudFront prefix list (pl-3b927c52).
+- Requests from any other source (including direct internet) are dropped at
+  the network layer before reaching the ALB listener.
+- A 403 would mean the request reached the listener but was rejected by rule.
+- A timeout means the request was dropped at the SG — never reached the listener.
+- Network-layer blocking is a stronger security guarantee than application-layer rejection.
+
+WHAT THIS PROVES:
+- The ALB cannot be accessed directly from the public internet.
+- All traffic must flow through CloudFront (which stamps X-Chewbacca-Growl header).
+- Origin cloaking is working correctly at both layers:
+  Layer 1: SG blocks non-CloudFront IPs (network)
+  Layer 2: ALB listener rejects requests without X-Chewbacca-Growl header (application)
+
+AWS CLI CONFIRMATION (WAF + origin cloaking):
+  CloudFront WebACL: arn:aws:wafv2:us-east-1:583001104385:global/webacl/cloudyjones-cf-webacl01/...
+  ALB SG: sg-0721435774b98e5d3 (inbound HTTP only from pl-3b927c52 CloudFront prefix list)

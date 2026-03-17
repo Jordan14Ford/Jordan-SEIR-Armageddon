@@ -1,0 +1,10 @@
+2B Short Written Cache Explanation
+==================================
+
+What is my cache key for /api/* and why?
+----------------------------------------
+For /api/* we use a cache policy with TTL 0/0/0 (caching disabled). So effectively there is no cache key for API responses — every request goes to the origin and nothing is stored at the edge. That way user-specific or dynamic data (e.g. /api/list) is never served from cache to the wrong user, and writes always see fresh reads.
+
+What am I forwarding to origin and why?
+--------------------------------------
+For /api/* we use an origin request policy that forwards: all cookies, all query strings, and a whitelist of headers (Content-Type, Accept, Origin). We forward those so the origin can do auth, respect query params, and handle body types. We do not put them in the cache key because we are not caching API responses; we only need the origin to receive them to build the correct response.

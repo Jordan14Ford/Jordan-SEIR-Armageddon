@@ -1,0 +1,38 @@
+Lab 2A Verification Results
+
+Date: 2026-03-16
+Tester: (automated run + local follow-up)
+
+Verification goals:
+1. Confirm CloudFront exists and is configured
+2. Confirm WAF is attached
+3. Confirm DNS / Route53 routing
+4. Confirm application is reachable through the public endpoint
+5. Confirm direct ALB access is blocked or restricted
+6. Confirm cache behavior rules exist where required
+
+Results summary:
+- aws_account_id.txt: 583001104385
+- cloudfront_list.txt: captured (1 distribution, EOCU676C9I3FL)
+- cloudfront_distribution.txt: captured (full distribution config)
+- cloudfront_behaviors.txt: captured (path patterns /api/public-feed, /api/*, /static/* + default)
+- waf_for_distribution.txt: WAF proof from CloudFront GetDistribution (WebACLId); get-web-acl-for-resource does not support CloudFront
+- route53_zones.txt: captured (cloudyjones.xyz hosted zone)
+- alb_list.txt: captured (cloudyjones-alb01, DNS name present)
+- app_via_domain_headers.txt / app_via_domain_verbose.txt: PLACEHOLDER — run locally (see commands below)
+- alb_direct_headers.txt / alb_direct_verbose.txt: PLACEHOLDER — run locally; must show 403 for origin cloaking
+
+Expected interpretation:
+- Public domain (https://app.cloudyjones.xyz) should return 200 via CloudFront when run locally
+- Direct ALB (http or https to ALB DNS) should return 403 when run locally (origin cloaking)
+- CloudFront config shows intended cache behaviors and WAF attachment
+
+Current status:
+- AWS CLI verification: complete (CloudFront, WAF via distribution, Route53, ALB list)
+- Curl verification: run locally and paste outputs into app_via_domain_*.txt and alb_direct_*.txt
+
+Follow-ups (copy-paste from repo root):
+  curl -sI "https://app.cloudyjones.xyz" | tee Lab2/Lab2A/deliverables/verification/app_via_domain_headers.txt
+  export ALB_DNS=$(terraform -chdir=Lab2/Lab2A output -raw alb_dns)
+  curl -sI "https://$ALB_DNS" -k | tee Lab2/Lab2A/deliverables/verification/alb_direct_headers.txt
+Then update this file (Date, Current status) and zip: cd Lab2/Lab2A && zip -r lab2a_deliverables.zip deliverables

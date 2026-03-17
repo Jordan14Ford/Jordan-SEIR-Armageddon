@@ -1,0 +1,12 @@
+{
+    "NextMarker": "cloudyjones-cf-webacl01",
+    "WebACLs": [
+        {
+            "Name": "cloudyjones-cf-webacl01",
+            "Id": "8bdb58a8-bc6a-4830-9ca1-74bbd79ab426",
+            "Description": "WAF for CloudFront distribution - CLOUDFRONT scope",
+            "LockToken": "1c62b865-f4e1-4849-8531-50380ed464e1",
+            "ARN": "arn:aws:wafv2:us-east-1:583001104385:global/webacl/cloudyjones-cf-webacl01/8bdb58a8-bc6a-4830-9ca1-74bbd79ab426"
+        }
+    ]
+}

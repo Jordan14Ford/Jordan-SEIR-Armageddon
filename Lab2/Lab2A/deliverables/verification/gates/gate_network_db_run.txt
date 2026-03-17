@@ -1,0 +1,50 @@
+=== Running gate_network_db.sh ===
+
+=== SEIR Gate: Network + RDS Verification ===
+Timestamp (UTC): 2026-03-17T06:24:25Z
+Region:          us-east-1
+EC2 Instance:    i-06003411f26d02bef
+RDS Instance:    lab1a-mysql-db
+Engine:          mysql
+DB Port:         3306
+Caller ARN:      arn:aws:iam::583001104385:user/AWSCLI
+-------------------------------------------
+PASS: aws sts get-caller-identity succeeded (credentials OK).
+PASS: RDS instance exists (lab1a-mysql-db).
+PASS: RDS is not publicly accessible (PubliclyAccessible=False).
+PASS: discovered DB port = 3306 (engine=mysql).
+PASS: EC2 security groups resolved (i-06003411f26d02bef): sg-0719a1b8ed6c9192c
+PASS: RDS security groups resolved (lab1a-mysql-db): sg-0f17d1eded3a2a9ab
+INFO: private subnet check disabled (CHECK_PRIVATE_SUBNETS=false).
+
+Failures:
+  - FAIL: no SG-to-SG ingress rule found allowing EC2 SG -> RDS on port 3306.
+
+RESULT: FAIL
+===========================================
+
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+Wrote: gate_result.json

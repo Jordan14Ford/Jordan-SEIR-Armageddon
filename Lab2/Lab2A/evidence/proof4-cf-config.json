@@ -1,0 +1,9 @@
+{
+    "WAF": "arn:aws:wafv2:us-east-1:583001104385:global/webacl/cloudyjones-cf-webacl01/8bdb58a8-bc6a-4830-9ca1-74bbd79ab426",
+    "Origins": [
+        {
+            "Domain": "cloudyjones-alb01-837551053.us-east-1.elb.amazonaws.com",
+            "Protocol": "http-only"
+        }
+    ]
+}

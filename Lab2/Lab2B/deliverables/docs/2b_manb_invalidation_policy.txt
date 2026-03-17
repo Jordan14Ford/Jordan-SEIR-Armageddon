@@ -1,0 +1,41 @@
+Honors+ Paragraph: CloudFront Invalidation Policy (Be A Man B)
+==============================================================
+
+When do we invalidate? When do we version instead? Why is /* restricted?
+
+For static assets that change regularly — JavaScript bundles, CSS files, images —
+the correct approach is versioning, not invalidation. You deploy a new file with a
+new name (e.g., /static/app.9f3c1c7.js instead of /static/app.js) and update the
+HTML reference. CloudFront automatically serves the new file on the next request
+because the URL is different. No invalidation path is consumed, no propagation
+delay, no cost. This is the everyday deployment pattern.
+
+Invalidation is the break-glass lever. We use it when we cannot change the URL:
+a corrupted /static/index.html that references wrong asset hashes, a security
+incident where cached content must be purged immediately, or a legal takedown.
+In those cases we invalidate the smallest possible path — /static/index.html,
+not /static/* and certainly not /*. The reason /* is restricted is threefold:
+it exhausts the 1,000 free invalidation paths per month in a single command,
+it floods every CloudFront edge location with simultaneous origin fetches
+(a self-inflicted traffic spike), and it is almost always broader than the
+actual blast radius of the incident.
+
+The engineering discipline here is: if you find yourself reaching for /* regularly,
+that is a signal that the deployment process is broken, not that invalidation
+policy is too strict. Fix the process; leave the break-glass tool intact.
+
+CLI commands used (reference):
+  # Targeted invalidation (preferred):
+  aws cloudfront create-invalidation \
+    --distribution-id EOCU676C9I3FL \
+    --paths "/static/index.html"
+
+  # Track until complete:
+  aws cloudfront get-invalidation \
+    --distribution-id EOCU676C9I3FL \
+    --id <INVALIDATION_ID>
+
+  # Wildcard (only with documented justification):
+  aws cloudfront create-invalidation \
+    --distribution-id EOCU676C9I3FL \
+    --paths "/static/*"

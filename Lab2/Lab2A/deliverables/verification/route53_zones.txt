@@ -1,0 +1,14 @@
+{
+    "HostedZones": [
+        {
+            "Id": "/hostedzone/Z01825573SNDEWHMXEY94",
+            "Name": "cloudyjones.xyz.",
+            "CallerReference": "terraform-20260306000211854300000001",
+            "Config": {
+                "Comment": "Managed by Terraform",
+                "PrivateZone": false
+            },
+            "ResourceRecordSetCount": 6
+        }
+    ]
+}

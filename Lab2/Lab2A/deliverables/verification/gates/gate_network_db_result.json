@@ -1,0 +1,23 @@
+{
+  "gate": "network_db",
+  "timestamp_utc": "2026-03-17T06:24:25Z",
+  "region": "us-east-1",
+  "instance_id": "i-06003411f26d02bef",
+  "db_id": "lab1a-mysql-db",
+  "engine": "mysql",
+  "db_port": "3306",
+  "publicly_accessible": "False",
+  "ec2_security_groups": "sg-0719a1b8ed6c9192c",
+  "rds_security_groups": "sg-0f17d1eded3a2a9ab",
+  "db_subnet_group": "lab1a-db-subnet-group",
+  "toggles": {
+    "check_private_subnets": false
+  },
+  "status": "FAIL",
+  "exit_code": 2,
+  "details": [
+"PASS: aws sts get-caller-identity succeeded (credentials OK).","PASS: RDS instance exists (lab1a-mysql-db).","PASS: RDS is not publicly accessible (PubliclyAccessible=False).","PASS: discovered DB port = 3306 (engine=mysql).","PASS: EC2 security groups resolved (i-06003411f26d02bef): sg-0719a1b8ed6c9192c","PASS: RDS security groups resolved (lab1a-mysql-db): sg-0f17d1eded3a2a9ab","INFO: private subnet check disabled (CHECK_PRIVATE_SUBNETS=false)."],
+  "warnings": [],
+  "failures": [
+"FAIL: no SG-to-SG ingress rule found allowing EC2 SG -> RDS on port 3306."]
+}

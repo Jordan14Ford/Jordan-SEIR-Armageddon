@@ -164,7 +164,7 @@ resource "aws_instance" "cloudyjones_ec201_private" {
     pip3 install flask pymysql boto3
 
     cat > /home/ec2-user/app.py << 'APPEOF'
-    from flask import Flask, request
+    from flask import Flask, request, Response, make_response
     import pymysql
     import boto3
     import json
@@ -304,6 +304,36 @@ resource "aws_instance" "cloudyjones_ec201_private" {
             logger.exception("ERROR: DB list failed")
             emit_db_error_metric()
             return {"error": f"db list failed: {exc}"}, 500
+
+    # Lab 2B: /api/list — same logic as /list, explicit no-cache header (ManA)
+    @app.route('/api/list')
+    def api_list():
+        result = list_notes()
+        if isinstance(result, tuple):
+            body, status = result
+            resp = make_response(json.dumps(body), status)
+        else:
+            resp = make_response(result)
+        resp.headers['Cache-Control'] = 'private, no-store'
+        resp.headers['Content-Type'] = 'application/json'
+        return resp
+
+    # Lab 2B: /api/public-feed — small public payload, origin drives TTL (ManA / Honors A)
+    @app.route('/api/public-feed')
+    def public_feed():
+        resp = make_response(json.dumps({"feed": "public"}))
+        resp.headers['Cache-Control'] = 'public, s-maxage=30, max-age=0'
+        resp.headers['Content-Type'] = 'application/json'
+        return resp
+
+    # Lab 2B: /static/example.txt — static asset with ETag for CloudFront revalidation (ManC)
+    @app.route('/static/example.txt')
+    def static_example():
+        body = "Example static content for Lab 2B.\n"
+        resp = Response(body, mimetype='text/plain')
+        resp.headers['ETag'] = '"df882e72414faf3025de96f74eb44ba7"'
+        resp.headers['Last-Modified'] = 'Mon, 17 Mar 2026 00:00:00 GMT'
+        return resp
 
     if __name__ == '__main__':
         app.run(host='0.0.0.0', port=80)
