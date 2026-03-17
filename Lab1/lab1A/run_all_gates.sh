@@ -78,7 +78,7 @@ chmod +x ./gate_secrets_and_role.sh ./gate_network_db.sh || true
 echo "=== Running Gate 1/2: secrets_and_role ==="
 set +e
 OUT_JSON_1="gate_secrets_and_role.json" \
-REGION="$REGION" INSTANCE_ID="$INSTANCE_ID" SECRET_ID="$SECRET_ID" \
+AWS_REGION="$REGION" INSTANCE_ID="$INSTANCE_ID" SECRET_ID="$SECRET_ID" \
 REQUIRE_ROTATION="$REQUIRE_ROTATION" \
 CHECK_SECRET_POLICY_WILDCARD="$CHECK_SECRET_POLICY_WILDCARD" \
 CHECK_SECRET_VALUE_READ="$CHECK_SECRET_VALUE_READ" \
@@ -91,7 +91,7 @@ set -e
 echo "=== Running Gate 2/2: network_db ==="
 set +e
 OUT_JSON_2="gate_network_db.json" \
-REGION="$REGION" INSTANCE_ID="$INSTANCE_ID" DB_ID="$DB_ID" \
+AWS_REGION="$REGION" INSTANCE_ID="$INSTANCE_ID" RDS_INSTANCE_ID="$DB_ID" DB_PORT=3306 \
 CHECK_PRIVATE_SUBNETS="$CHECK_PRIVATE_SUBNETS" \
 ./gate_network_db.sh
 rc2=$?
