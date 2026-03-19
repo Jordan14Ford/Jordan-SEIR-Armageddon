@@ -1,0 +1,14 @@
+{
+    "logStreams": [
+        {
+            "logStreamName": "us-east-1_cloudyjones-webacl01_0",
+            "creationTime": 1771905349879,
+            "firstEventTimestamp": 1771905336867,
+            "lastEventTimestamp": 1771905336867,
+            "lastIngestionTime": 1771905349961,
+            "uploadSequenceToken": "49039859662974640516697098350677311233884580402121611716",
+            "arn": "arn:aws:logs:us-east-1:583001104385:log-group:aws-waf-logs-cloudyjones-webacl01:log-stream:us-east-1_cloudyjones-webacl01_0",
+            "storedBytes": 0
+        }
+    ]
+}

@@ -1,0 +1,40 @@
+[
+    {
+        "Name": "cloudyjones.xyz.",
+        "Type": "A",
+        "AliasTarget": {
+            "HostedZoneId": "Z35SXDOTRQ7X7K",
+            "DNSName": "cloudyjones-alb01-150810689.us-east-1.elb.amazonaws.com.",
+            "EvaluateTargetHealth": true
+        }
+    },
+    {
+        "Name": "cloudyjones.xyz.",
+        "Type": "NS",
+        "TTL": 172800,
+        "ResourceRecords": [
+            {
+                "Value": "ns-116.awsdns-14.com."
+            },
+            {
+                "Value": "ns-794.awsdns-35.net."
+            },
+            {
+                "Value": "ns-1308.awsdns-35.org."
+            },
+            {
+                "Value": "ns-1663.awsdns-15.co.uk."
+            }
+        ]
+    },
+    {
+        "Name": "cloudyjones.xyz.",
+        "Type": "SOA",
+        "TTL": 900,
+        "ResourceRecords": [
+            {
+                "Value": "ns-116.awsdns-14.com. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"
+            }
+        ]
+    }
+]

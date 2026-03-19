@@ -1,0 +1,4 @@
+# Run locally and paste output here:
+# curl -sv https://app.cloudyjones.xyz -o /dev/null 2>&1
+#
+# (Automated run timed out from verification environment.)

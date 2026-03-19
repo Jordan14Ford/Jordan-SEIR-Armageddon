@@ -1,0 +1,32 @@
+Lab 2A Verification Results
+
+Date: REPLACE_ME
+Tester: Jordan
+
+Verification goals:
+1. Confirm CloudFront exists and is configured
+2. Confirm WAF is attached
+3. Confirm Route53 / DNS routing exists
+4. Confirm application is reachable through the intended public domain
+5. Confirm direct ALB access is blocked or restricted
+6. Confirm cache behavior rules exist where required
+
+Results summary:
+- CloudFront distribution output saved in cloudfront_distribution.txt
+- CloudFront config / path behavior output saved in cloudfront_behaviors.txt
+- WAF attachment output saved in waf_for_distribution.txt
+- Route53 record output saved in route53_records.txt
+- Public hostname response saved in app_via_domain_headers.txt and app_via_domain_verbose.txt
+- Direct ALB response saved in alb_direct_headers.txt and alb_direct_verbose.txt
+
+Expected interpretation:
+- Public domain should be reachable
+- Direct ALB access should return 403, deny access, or otherwise show origin cloaking protection
+- CloudFront config should show the intended cache behaviors
+- WAF output should confirm attachment to the CloudFront distribution
+
+Current status:
+- REPLACE_ME after review of outputs
+
+Follow-ups:
+- REPLACE_ME if any output is missing or inconsistent

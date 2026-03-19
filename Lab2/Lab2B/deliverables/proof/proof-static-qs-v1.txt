@@ -1,0 +1,13 @@
+HTTP/2 200 
+content-type: text/plain; charset=utf-8
+content-length: 35
+date: Tue, 17 Mar 2026 12:57:50 GMT
+server: Werkzeug/3.1.6 Python/3.9.25
+x-cache: Hit from cloudfront
+via: 1.1 4c6791f6512d8ae3b564d0ef4751f078.cloudfront.net (CloudFront)
+x-amz-cf-pop: IAD61-P10
+x-amz-cf-id: YjZKv_k04IJIYMMebwNFOrrPWXhwj4ou6hjfqObwziK_IlMfKjOuhA==
+age: 28
+cache-control: public, max-age=86400
+
+Example static content for Lab 2B.

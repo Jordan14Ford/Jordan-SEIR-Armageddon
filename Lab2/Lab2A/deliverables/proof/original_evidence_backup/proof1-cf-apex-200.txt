@@ -1,0 +1,11 @@
+HTTP/2 200 
+content-type: text/html; charset=utf-8
+content-length: 47
+date: Sun, 08 Mar 2026 23:42:38 GMT
+server: Werkzeug/3.1.6 Python/3.9.25
+x-cache: Miss from cloudfront
+via: 1.1 317e34db72356fbec872f4f5021e4c9c.cloudfront.net (CloudFront)
+x-amz-cf-pop: IAD61-P10
+x-amz-cf-id: zaLp3oBsxpbq5Mz4Wx0jldfBGjqSfGg2LcQeE9D8BVtzE9lk4T-ZNw==
+
+<h1>cloudyjones — private EC2, Section A</h1>

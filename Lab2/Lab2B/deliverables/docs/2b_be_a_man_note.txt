@@ -1,0 +1,59 @@
+Be A Man — Full Mapping (from SEIR_Foundations/LAB2 source files)
+=================================================================
+
+Source files read:
+  2b_Be_A_Man.txt, 2b_Be_A_ManA.txt, 2b_Be_A_ManB.txt, 2b_Be_A_ManC.txt, 2b_deliverables.txt
+
+Umbrella (2b_Be_A_Man.txt — "Beron Da Saluki criteria"):
+  1. Implement safe caching for a public GET using Cache-Control from origin.
+  2. Demonstrate correct behavior using headers and evidence.
+  3. Show understanding of why Cache-Control is preferred.
+
+Deliverable A.4 (from 2b_deliverables.txt):
+  Response headers policy for explicit Cache-Control on static (or security headers).
+
+Implementation:
+  - Terraform: aws_cloudfront_response_headers_policy.cloudyjones_static_rhp
+    (Lab2/Lab2A/lab2b_response_headers_policy.tf)
+  - Adds header: Cache-Control: public, max-age=86400
+  - Attached to: /static/* ordered_cache_behavior in lab2_cloudfront_alb.tf
+
+ManA — Honors: Origin-Driven Caching (2b_Be_A_ManA.txt):
+  Requirements:
+    - /api/public-feed returns Cache-Control: public, s-maxage=30, max-age=0 → DONE
+    - /api/list returns Cache-Control: private, no-store → NOT YET (app must be updated)
+    - Terraform uses UseOriginCacheControlHeaders for /api/public-feed → DONE
+    - Proof: Miss → Hit → Miss for public-feed (3 requests with 35s sleep) → NOT YET
+    - Proof: /api/list → no Hit, shows private, no-store → NOT YET
+    - Written paragraph: origin-driven vs disable → DONE (2b_honors_paragraph.txt)
+
+ManB — Honors+: Invalidation (2b_Be_A_ManB.txt):
+  Requirements:
+    - Run create-invalidation for a static path
+    - Before/after cache proof
+    - Paragraph: when invalidate vs version, why /* is restricted
+  Status: NOT ATTEMPTED
+
+ManC — Honors++: RefreshHit (2b_Be_A_ManC.txt):
+  Requirements:
+    - Add validators (ETag or Last-Modified) to an endpoint
+    - Observe RefreshHit after TTL expiry
+    - Paragraph: what RefreshHit means
+  Status: NOT ATTEMPTED
+
+Python Tooling Connection:
+  The SEIR_Foundations/LAB2/python/ folder contains tools directly
+  relevant to Be A Man verification:
+  - malgus_cloudfront_cache_probe.py: Runs repeated requests and prints
+    x-cache/age/cache-control per round. Directly produces the ManA
+    Miss→Hit→Miss evidence and D.1/D.2 proof programmatically.
+  - malgus_origin_cloak_tester.py: Tests CF URL vs ALB URL, prints
+    PASS/FAIL for origin cloaking (2A requirement).
+  - run_all_gates.sh: Full infrastructure gate that checks CF, WAF,
+    R53, ACM, TLS, SG, logging. Outputs gate_result.json + badge.txt.
+    Running this gives an objective infrastructure grade.
+
+Note on 2b_class_questions.txt:
+  Contains instructor failure-injection scenarios ("Sith Lord" challenges).
+  These are NOT student-written deliverables. They describe incidents
+  the instructor may impose. No pre-written answers are required.

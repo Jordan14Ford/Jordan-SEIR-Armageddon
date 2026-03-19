@@ -1,0 +1,11 @@
+Lab2/Lab2A/data.tf
+Lab2/Lab2A/lab2_cloudfront_alb.tf
+Lab2/Lab2A/lab2_cloudfront_origin_cloaking.tf
+Lab2/Lab2A/lab2_cloudfront_r53.tf
+Lab2/Lab2A/lab2_cloudfront_shield_waf.tf
+Lab2/Lab2A/lab2_ec2_s3_access.tf
+Lab2/Lab2A/lab2b_cache_policies.tf
+Lab2/Lab2A/lab2b_honors_origin_driven.tf
+Lab2/Lab2A/outputs.tf
+Lab2/Lab2A/providers.tf
+Lab2/Lab2A/variables.tf

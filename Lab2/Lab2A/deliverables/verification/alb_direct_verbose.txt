@@ -1,0 +1,4 @@
+# Run locally and paste output here:
+# curl -sv http://cloudyjones-alb01-837551053.us-east-1.elb.amazonaws.com -o /dev/null 2>&1
+#
+# (Automated run timed out from verification environment.)

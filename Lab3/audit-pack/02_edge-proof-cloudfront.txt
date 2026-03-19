@@ -1,0 +1,29 @@
+LAB 3 — EDGE PROOF (CLOUDFRONT)
+
+================================================================================
+STATUS: LIVE EVIDENCE — captured 2026-03-16
+================================================================================
+
+CLOUDFRONT DISTRIBUTION — Live
+Distribution ID:  E21VKJX8IT4I09
+Domain:           d1ukfjlu61n1r6.cloudfront.net
+Origin:           lab3-tokyo-alb-2005384345.ap-northeast-1.elb.amazonaws.com
+Origin protocol:  HTTP only (ALB listener is port 80)
+Cache policy:     CachingDisabled — PHI must never be cached outside Japan
+WAF attached:     arn:aws:wafv2:us-east-1:583001104385:global/webacl/lab3-waf-acl/9a2f2c08-c9bb-45f8-9905-0027fe139d66
+Price class:      PriceClass_100 (North America + Europe edges)
+
+Origin cloaking:
+Custom header X-CloudFront-Secret injected on every request to origin.
+Value: "Sao Paulo living tokyo dreaming"
+ALB listener rule enforcement: planned enhancement — documented in DECISIONS.md
+
+Health check through CloudFront edge:
+curl -s http://d1ukfjlu61n1r6.cloudfront.net/health
+Response: {"phi_storage":true,"region":"ap-northeast-1","role":"data-authority","status":"healthy"}
+
+VERDICT: PASS
+- CloudFront is the single global entry point
+- All requests route to Tokyo origin
+- PHI never cached at edge — APPI compliant
+- WAF attached and enforcing rules

@@ -1,0 +1,45 @@
+{
+  "lab": "Lab3",
+  "generated": "2026-03-16",
+  "account_id": "583001104385",
+  "regions": {
+    "tokyo": "ap-northeast-1",
+    "sao_paulo": "sa-east-1",
+    "osaka": "ap-northeast-3"
+  },
+  "claims": {
+    "tokyo_only_db": true,
+    "no_rds_in_sao_paulo": true,
+    "no_rds_in_osaka": true,
+    "tgw_corridor_exists": true,
+    "tgw_peering_available": true,
+    "sao_paulo_app_points_to_tokyo_rds": true,
+    "cloudfront_deployed": true,
+    "waf_cloudfront_scope_deployed": true,
+    "waf_regional_alb_deployed": true,
+    "direct_alb_blocked_by_regional_waf": true,
+    "route53_failover_configured": true
+  },
+  "resources": {
+    "tokyo_rds_identifier": "lab3-tokyo-mysql",
+    "tokyo_tgw_id": "tgw-07c760214412bf700",
+    "sao_paulo_tgw_id": "tgw-0ba2e4a991b66f7b0",
+    "tgw_peering_attachment_id": "tgw-attach-069c3589989778681",
+    "tokyo_rds_sg_id": "sg-045d82a2ddec9f13f",
+    "cloudfront_distribution_id": "E21VKJX8IT4I09",
+    "cloudfront_domain": "d3ahg5vvpxgwi8.cloudfront.net",
+    "waf_cloudfront_acl_arn": "arn:aws:wafv2:us-east-1:583001104385:global/webacl/lab3-waf/f8bcefb4-ad9a-41e7-a95f-8ac3b0519ac5",
+    "waf_alb_acl_name": "lab3-alb-waf",
+    "route53_domain": "lab3.cloudyjones.xyz",
+    "route53_policy": "failover",
+    "route53_primary_alb": "tokyo",
+    "route53_secondary_alb": "osaka"
+  },
+  "scripts": {
+    "residency_proof": "python/malgus_residency_proof.py",
+    "tgw_corridor_proof": "python/malgus_tgw_corridor_proof.py",
+    "cloudtrail_changes": "python/malgus_cloudtrail_last_changes.py",
+    "waf_summary": "python/malgus_waf_summary.py",
+    "cloudfront_log_explainer": "python/malgus_cloudfront_log_explainer.py"
+  }
+}

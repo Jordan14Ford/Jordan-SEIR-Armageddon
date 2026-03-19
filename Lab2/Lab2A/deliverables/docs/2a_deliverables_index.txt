@@ -1,0 +1,23 @@
+Lab 2A Deliverables Index
+
+Folder purpose:
+This folder stores proof, verification outputs, and notes for Lab 2A submission.
+
+Contents:
+- proof/: screenshots, copied evidence, and manually captured proof files
+- verification/: CLI outputs and curl test results
+- docs/: written explanations of what each proof demonstrates
+
+What should be recorded here:
+1. CloudFront proof
+2. WAF proof
+3. Route53 / DNS proof
+4. Origin cloaking proof
+5. Direct ALB blocked proof (403 expected)
+6. Cache behavior proof if applicable
+7. Notes about dependencies from earlier labs
+
+Status:
+- Infrastructure implementation exists in Terraform
+- Verification outputs should be saved into deliverables/verification
+- Screenshots or copied evidence should be saved into deliverables/proof

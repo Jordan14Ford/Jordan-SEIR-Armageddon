@@ -1,0 +1,5 @@
+aws_region  = "us-east-1"
+project     = "cloudyjones"
+db_name     = "labdb"
+db_username = "admin"
+db_password = "ChangeMeLab1c!123"

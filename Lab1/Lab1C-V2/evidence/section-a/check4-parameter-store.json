@@ -1,0 +1,11 @@
+{
+    "Parameter": {
+        "Name": "/lab/rds/endpoint",
+        "Type": "String",
+        "Value": "lab1a-mysql-db.cenw8ykkspmw.us-east-1.rds.amazonaws.com",
+        "Version": 2,
+        "LastModifiedDate": "2026-02-22T18:20:07.077000-05:00",
+        "ARN": "arn:aws:ssm:us-east-1:583001104385:parameter/lab/rds/endpoint",
+        "DataType": "text"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "queryLanguage": "CWLI",
+    "results": [],
+    "statistics": {
+        "recordsMatched": 0.0,
+        "recordsScanned": 0.0,
+        "estimatedRecordsSkipped": 2.0,
+        "bytesScanned": 0.0,
+        "estimatedBytesSkipped": 2580.0,
+        "logGroupsScanned": 1.0
+    },
+    "status": "Complete"
+}

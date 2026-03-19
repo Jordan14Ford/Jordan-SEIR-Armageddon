@@ -1,0 +1,18 @@
+# Terraform state (never commit — contains resource IDs and sensitive values)
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate.*
+
+# Terraform plan binary
+tfplan
+*.tfplan
+
+# Terraform provider cache (large binaries, re-downloaded by terraform init)
+.terraform/
+
+# Lock file is OK to commit, but excluding here since it was already unstaged
+# .terraform.lock.hcl
+
+# Terraform variable values (may contain secrets)
+terraform.tfvars
+*.auto.tfvars

@@ -1,0 +1,24 @@
+# Terraform state and backups (contain resource IDs and sometimes sensitive data)
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Provider plugins and lock (optional: remove .terraform.lock.hcl to ignore lock file)
+.terraform/
+# .terraform.lock.hcl
+
+# Variable files that may contain secrets (e.g. db_password in terraform.tfvars)
+*.tfvars
+terraform.tfvars
+*.tfvars.json
+
+# Crash and override files
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# OS
+.DS_Store

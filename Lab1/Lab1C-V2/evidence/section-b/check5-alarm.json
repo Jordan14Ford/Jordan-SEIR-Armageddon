@@ -1,0 +1,36 @@
+{
+    "MetricAlarms": [
+        {
+            "AlarmName": "cloudyjones-alb-5xx",
+            "AlarmArn": "arn:aws:cloudwatch:us-east-1:583001104385:alarm:cloudyjones-alb-5xx",
+            "AlarmDescription": "ALB 5xx error spike",
+            "AlarmConfigurationUpdatedTimestamp": "2026-02-23T11:35:26.631000-05:00",
+            "ActionsEnabled": true,
+            "OKActions": [],
+            "AlarmActions": [
+                "arn:aws:sns:us-east-1:583001104385:cloudyjones-sns-topic01"
+            ],
+            "InsufficientDataActions": [],
+            "StateValue": "INSUFFICIENT_DATA",
+            "StateReason": "Insufficient Data: 2 datapoints were unknown.",
+            "StateReasonData": "{\"version\":\"1.0\",\"queryDate\":\"2026-02-24T03:07:41.864+0000\",\"statistic\":\"Sum\",\"period\":60,\"recentDatapoints\":[],\"threshold\":10.0,\"evaluatedDatapoints\":[{\"timestamp\":\"2026-02-24T03:04:00.000+0000\"},{\"timestamp\":\"2026-02-24T03:03:00.000+0000\"}]}",
+            "StateUpdatedTimestamp": "2026-02-23T22:07:41.865000-05:00",
+            "MetricName": "HTTPCode_ELB_5XX_Count",
+            "Namespace": "AWS/ApplicationELB",
+            "Statistic": "Sum",
+            "Dimensions": [
+                {
+                    "Name": "LoadBalancer",
+                    "Value": "app/cloudyjones-alb01/62e04e1f56e3f32f"
+                }
+            ],
+            "Period": 60,
+            "EvaluationPeriods": 2,
+            "Threshold": 10.0,
+            "ComparisonOperator": "GreaterThanThreshold",
+            "TreatMissingData": "missing",
+            "StateTransitionedTimestamp": "2026-02-23T22:07:41.865000-05:00"
+        }
+    ],
+    "CompositeAlarms": []
+}
