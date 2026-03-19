@@ -21,7 +21,7 @@ provider "aws" {
 # CORE  — VPC · EC2 · RDS · SSM · Secrets · SNS · CW alarm
 # ─────────────────────────────────────────────
 module "core" {
-  source = "./modules/core"
+  source = "./core"
 
   aws_region           = var.aws_region
   project              = var.project
@@ -41,7 +41,7 @@ module "core" {
 # BONUS-A  — VPC endpoints (SSM · CW · Secrets · S3)
 # ─────────────────────────────────────────────
 module "section_a" {
-  source = "./modules/section-a"
+  source = "./section-a"
 
   aws_region           = var.aws_region
   project              = var.project
@@ -55,7 +55,7 @@ module "section_a" {
 # BONUS-D  — S3 bucket for ALB access logs (must exist before section-b creates the ALB)
 # ─────────────────────────────────────────────
 module "section_d" {
-  source = "./modules/section-d"
+  source = "./section-d"
 
   project      = var.project
   account_id   = module.core.account_id
@@ -70,7 +70,7 @@ module "section_d" {
 # depends on section-d for the log bucket name
 # ─────────────────────────────────────────────
 module "section_b" {
-  source = "./modules/section-b"
+  source = "./section-b"
 
   aws_region           = var.aws_region
   project              = var.project
@@ -86,7 +86,7 @@ module "section_b" {
 # BONUS-C  — Route53 hosted zone · ACM cert · DNS validation · HTTPS listener
 # ─────────────────────────────────────────────
 module "section_c" {
-  source = "./modules/section-c"
+  source = "./section-c"
 
   project      = var.project
   domain_name  = var.domain_name
@@ -101,7 +101,7 @@ module "section_c" {
 # BONUS-E  — WAF logging → CloudWatch Logs
 # ─────────────────────────────────────────────
 module "section_e" {
-  source = "./modules/section-e"
+  source = "./section-e"
 
   project = var.project
   waf_arn = module.section_b.waf_arn
@@ -111,7 +111,7 @@ module "section_e" {
 # BONUS-G  — Bedrock Auto-IR Lambda
 # ─────────────────────────────────────────────
 module "section_g" {
-  source = "./modules/section-g"
+  source = "./section-g"
 
   aws_region         = var.aws_region
   project            = var.project
