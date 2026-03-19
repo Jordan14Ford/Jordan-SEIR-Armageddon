@@ -1,0 +1,34 @@
+{
+    "LoadBalancers": [
+        {
+            "LoadBalancerArn": "arn:aws:elasticloadbalancing:us-east-1:583001104385:loadbalancer/app/cloudyjones-alb01/787859777f179c9e",
+            "DNSName": "cloudyjones-alb01-837551053.us-east-1.elb.amazonaws.com",
+            "CanonicalHostedZoneId": "Z35SXDOTRQ7X7K",
+            "CreatedTime": "2026-03-06T00:02:38.751000+00:00",
+            "LoadBalancerName": "cloudyjones-alb01",
+            "Scheme": "internet-facing",
+            "VpcId": "vpc-0e61a7b7044f6dfb2",
+            "State": {
+                "Code": "active"
+            },
+            "Type": "application",
+            "AvailabilityZones": [
+                {
+                    "ZoneName": "us-east-1b",
+                    "SubnetId": "subnet-01660896e86b359d7",
+                    "LoadBalancerAddresses": []
+                },
+                {
+                    "ZoneName": "us-east-1a",
+                    "SubnetId": "subnet-0b169845e69e9903a",
+                    "LoadBalancerAddresses": []
+                }
+            ],
+            "SecurityGroups": [
+                "sg-0721435774b98e5d3"
+            ],
+            "IpAddressType": "ipv4",
+            "EnablePrefixForIpv6SourceNat": "off"
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+Honors++ Paragraph: What is RefreshHit and why is it often better than a Miss?
+===============================================================================
+
+The three CloudFront cache outcomes most engineers encounter are:
+  Miss from cloudfront  — object was not in cache, fetched fully from origin
+  Hit from cloudfront   — object served entirely from edge cache, no origin contact
+  RefreshHit            — object existed in cache but TTL had expired; CloudFront
+                          sent a conditional request to origin using validators
+                          (If-None-Match or If-Modified-Since); origin replied
+                          304 Not Modified; CloudFront reused the cached body
+
+RefreshHit is better than a Miss in two ways. First, bandwidth: the origin only
+sends back a 304 header response, not the full body. If the file is a 500KB
+JavaScript bundle, the entire bundle transfer is avoided. Second, edge latency:
+CloudFront already has the bytes locally. If the origin confirms nothing changed,
+the edge serves the existing copy without waiting for a full download.
+
+RefreshHit is not a bug. It is the system working correctly when short TTLs
+and validators are used together. You see it most when:
+  - Cache-Control: public, max-age=30 causes TTL to expire frequently
+  - The origin sends a stable ETag or Last-Modified that doesn't change
+    between requests (content genuinely hasn't changed)
+
+The failure mode is RefreshHit that returns stale content. This happens when
+a developer updates the file content but forgets to update the ETag or
+Last-Modified value. CloudFront asks the origin "has this changed?" and the
+origin says "no" (because the validator wasn't updated), so CloudFront keeps
+serving the old bytes to users. The fix is not to invalidate blindly — it is
+to update the validator so the origin correctly signals a change on the next
+conditional request.
+
+In production, choosing between RefreshHit and Hit is a tradeoff between
+freshness and latency:
+  - Short TTL + validators = frequent revalidation, always fresh, slightly
+    higher origin load, better for content that changes often
+  - Long TTL + versioning  = rare origin contact, maximum performance,
+    zero revalidation overhead, best for immutable assets

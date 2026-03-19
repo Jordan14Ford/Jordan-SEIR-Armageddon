@@ -1,0 +1,36 @@
+Lab 2A Proof Map
+
+1. cloudfront_distribution.txt
+Purpose:
+Shows CloudFront distribution exists and is configured.
+
+2. cloudfront_behaviors.txt
+Purpose:
+Shows cache behavior / path behavior configuration such as:
+- /api/public-feed
+- /api/*
+- /static/*
+
+3. waf_for_distribution.txt
+Purpose:
+Shows WAF is attached to the CloudFront distribution.
+
+4. route53_records.txt
+Purpose:
+Shows Route53 alias / DNS records pointing to CloudFront or application domain.
+
+5. app_via_domain_headers.txt
+Purpose:
+Shows the application is reachable via the intended public domain and returns headers.
+
+6. alb_direct_headers.txt
+Purpose:
+Shows direct ALB access behavior. For origin cloaking, expected result is 403 or blocked access.
+
+7. verification_results.txt
+Purpose:
+Narrative record of what was tested, what passed, what still needs follow-up.
+
+Notes:
+- If any proof depends on a previous foundation lab, that dependency should be explained in verification_results.txt
+- If screenshots exist, place them in proof/ and reference them here

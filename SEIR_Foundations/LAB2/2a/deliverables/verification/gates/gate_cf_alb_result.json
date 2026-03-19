@@ -1,0 +1,45 @@
+{
+  "schema_version": "2.0",
+  "gate": "lab2_alb",
+  "timestamp_utc": "2026-03-17T06:25:36Z",
+  "badge": "RED",
+  "status": "FAIL",
+  "exit_code": 2,
+  "inputs": {
+    "origin_region": "us-east-1",
+    "cloudfront_distribution_id": "EOCU676C9I3FL",
+    "domain_name": "cloudyjones.xyz",
+    "route53_zone_id": "Z01825573SNDEWHMXEY94",
+    "alb_arn": "arn:aws:elasticloadbalancing:us-east-1:583001104385:loadbalancer/app/cloudyjones-alb01/787859777f179c9e",
+    "alb_sg_id": "sg-0721435774b98e5d3"
+  },
+  "observed": {
+    "caller_arn": "arn:aws:iam::583001104385:user/AWSCLI",
+    "cloudfront_domain": "d28ke8jfzy9p5x.cloudfront.net",
+    "cloudfront_status": "Deployed",
+    "alb_dns": "cloudyjones-alb01-837551053.us-east-1.elb.amazonaws.com",
+    "alb_scheme": "internet-facing"
+  },
+  "rollup": {
+    "details": [
+"PASS: AWS credentials OK (caller=arn:aws:iam::583001104385:user/AWSCLI).","PASS: CloudFront Enabled=True.","PASS: CloudFront Status=Deployed.","PASS: CloudFront aliases include cloudyjones.xyz.","PASS: CloudFront ACMCertificateArn present.","PASS: Minimum TLS includes TLSv1.2 (TLSv1.2_2021).","PASS: ACM cert ISSUED (us-east-1).","PASS: ACM cert covers cloudyjones.xyz.","PASS: Route53 A alias HostedZoneId is CloudFront (Z2FDTNDATAQYW2).","PASS: ALB exists (DNS=cloudyjones-alb01-837551053.us-east-1.elb.amazonaws.com).","PASS: CloudFront origin includes ALB DNSName.","PASS: ALB has listener on port 443.","PASS: ALB has listener on port 80.","PASS: ALB SG sg-0721435774b98e5d3 not world-open on port 443.","PASS: ALB SG sg-0721435774b98e5d3 not world-open on port 80.","INFO: STRICT CloudFront-only ingress check disabled (set REQUIRE_CLOUDFRONT_ONLY_INGRESS=true to enforce)."],
+    "warnings": [],
+    "failures": [
+"FAIL: WAF WebACL not associated with CloudFront.","FAIL: Route53 A alias target mismatch (expected=d28ke8jfzy9p5x.cloudfront.net actual=d28ke8jfzy9p5x.cloudfront.net.).","FAIL: Route53 AAAA alias missing for cloudyjones.xyz.","FAIL: CloudFront logging not enabled.","FAIL: ALB scheme is not internal (scheme=internet-facing)."]
+  },
+  "clocks": {
+    "first_seen_utc": "2026-03-17T06:25:20Z",
+    "last_seen_utc": "2026-03-17T06:25:20Z"
+  },
+  "sla": {
+    "target_hours": 24,
+    "due_utc": "",
+    "breached": false,
+    "age_seconds": "",
+    "remaining_seconds": ""
+  },
+  "artifacts": {
+    "badge_txt": "badge.txt",
+    "pr_comment_md": "pr_comment.md"
+  }
+}

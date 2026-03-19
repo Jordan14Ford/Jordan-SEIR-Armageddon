@@ -1,0 +1,58 @@
+{
+  "schema_version": "2.0",
+  "gate": "lab2_all_gates",
+  "timestamp_utc": "2026-03-17T06:27:34Z",
+  "badge": "RED",
+  "status": "FAIL",
+  "exit_code": 2,
+
+  "inputs": {
+    "origin_region": "us-east-1",
+    "cloudfront_distribution_id": "EOCU676C9I3FL",
+    "domain_name": "cloudyjones.xyz",
+    "route53_zone_id": "Z01825573SNDEWHMXEY94",
+    "acm_cert_arn": "arn:aws:acm:us-east-1:583001104385:certificate/4d5ab9d8-dc03-405c-8129-c7f0fbb30b4f",
+    "waf_web_acl_arn": "arn:aws:wafv2:us-east-1:583001104385:global/webacl/cloudyjones-cf-webacl01/8bdb58a8-bc6a-4830-9ca1-74bbd79ab426",
+    "log_bucket": "",
+    "origin_sg_id": "",
+    "app_ports": "443,80"
+  },
+
+  "observed": {
+    "caller_arn": "arn:aws:iam::583001104385:user/AWSCLI",
+    "cloudfront_domain": "d28ke8jfzy9p5x.cloudfront.net",
+    "cloudfront_status": "Deployed",
+    "cloudfront_enabled": "True",
+    "cloudfront_aliases": "app.cloudyjones.xyz	cloudyjones.xyz",
+    "viewer_cert_source": "acm",
+    "viewer_acm_arn": "arn:aws:acm:us-east-1:583001104385:certificate/4d5ab9d8-dc03-405c-8129-c7f0fbb30b4f",
+    "minimum_tls": "TLSv1.2_2021",
+    "logging_bucket": "",
+    "cache_policy_id": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
+  },
+
+  "rollup": {
+    "details": [
+"PASS: AWS credentials OK (caller=arn:aws:iam::583001104385:user/AWSCLI).","PASS: CloudFront distribution retrieved (ID=EOCU676C9I3FL).","PASS: CloudFront Enabled=True.","PASS: CloudFront Status=Deployed.","PASS: CloudFront aliases include domain (cloudyjones.xyz).","PASS: CloudFront uses ACM certificate (ACM ARN present).","PASS: Minimum TLS includes TLSv1.2 (MinimumProtocolVersion=TLSv1.2_2021).","PASS: ACM certificate is ISSUED (us-east-1).","PASS: ACM cert covers domain (cloudyjones.xyz).","PASS: Route53 record sets retrieved (zone=Z01825573SNDEWHMXEY94).","PASS: Route53 A alias HostedZoneId is CloudFront (Z2FDTNDATAQYW2).","INFO: LOG_BUCKET not provided; skipping S3 log bucket validations.","INFO: ORIGIN_SG_ID not provided; origin reachability enforcement checks skipped.","PASS: DefaultCacheBehavior uses CachePolicyId (modern caching config)."],
+    "warnings": [],
+    "failures": [
+"FAIL: No WAF WebACL associated with CloudFront distribution.","FAIL: Route53 A alias does not point to CloudFront (expected=d28ke8jfzy9p5x.cloudfront.net, actual=d28ke8jfzy9p5x.cloudfront.net.).","FAIL: Route53 AAAA alias record not found for cloudyjones.xyz.","FAIL: CloudFront logging not enabled (DistributionConfig.Logging.Bucket missing)."]
+  },
+
+  "clocks": {
+    "first_seen_utc": "2026-03-17T06:27:22Z",
+    "last_seen_utc": "2026-03-17T06:27:22Z"
+  },
+  "sla": {
+    "target_hours": 24,
+    "due_utc": "",
+    "breached": false,
+    "age_seconds": "",
+    "remaining_seconds": ""
+  },
+
+  "artifacts": {
+    "badge_txt": "badge.txt",
+    "pr_comment_md": "pr_comment.md"
+  }
+}

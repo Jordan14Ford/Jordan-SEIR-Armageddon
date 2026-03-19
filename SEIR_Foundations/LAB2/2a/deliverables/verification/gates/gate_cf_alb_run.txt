@@ -1,0 +1,49 @@
+=== Running run_all_gates_lab2_alb.sh ===
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+
+===== SEIR Lab 2 (ALB) Gate Summary =====
+BADGE:  RED  (written to badge.txt)
+RESULT: FAIL
+JSON:   gate_result.json
+PR:     pr_comment.md
+========================================
+

@@ -1,0 +1,46 @@
+Lab 2A Completion Checklist
+===========================
+
+Terraform
+---------
+[x] CloudFront distribution (ALB origin, custom header)
+[x] WAF attached to CloudFront
+[x] Route 53 A records (apex, app) → CloudFront
+[x] Origin cloaking (ALB SG + listener rule)
+[x] Path behaviors: /api/public-feed, /api/*, /static/*, default
+
+Verification (deliverables/verification/)
+-----------------------------------------
+[x] aws_account_id.txt
+[x] cloudfront_list.txt
+[x] cloudfront_distribution.txt
+[x] cloudfront_behaviors.txt
+[x] waf_for_distribution.txt
+[x] route53_zones.txt
+[x] alb_list.txt
+[x] verification_results.txt
+[ ] app_via_domain_headers.txt  ← Run: curl -sI https://app.cloudyjones.xyz
+[ ] alb_direct_headers.txt      ← Run: curl -sI https://$ALB_DNS -k (expect 403)
+[ ] dig_cf_proof.txt            ← Run: dig app.cloudyjones.xyz A +short
+
+Python Tooling / Gate (from SEIR_Foundations/LAB2/python/)
+----------------------------------------------------------
+[ ] Run malgus_origin_cloak_tester.py (CF URL + ALB URL → PASS/FAIL)
+    → Save output to: deliverables/verification/cloak_test_result.txt
+[ ] Run run_all_gates.sh with your env vars
+    → Save gate_result.json, badge.txt, pr_comment.md to verification/
+    → Gate checks: CF distribution, WAF, R53, ACM, TLS, SG, logging
+    → GREEN badge = full 2A pass
+
+Docs (deliverables/docs/)
+-------------------------
+[x] 2a_deliverables_index.txt
+[x] 2a_proof_map.txt
+[x] 2a_verification_results_template.txt
+[x] 2a_deliverables_tree.txt (optional refresh)
+[x] 2a_completion_checklist.txt (this file)
+
+Submission
+----------
+[ ] After curl outputs + gate + cloak test:
+    cd Lab2/Lab2A && zip -r lab2a_deliverables.zip deliverables

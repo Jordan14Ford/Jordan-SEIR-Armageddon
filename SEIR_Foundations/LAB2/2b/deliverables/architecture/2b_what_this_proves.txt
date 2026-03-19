@@ -1,0 +1,11 @@
+proof-static-example-1.txt, proof-static-example-2.txt:
+  /static/example.txt response headers (run curl twice). Second request should show cache hit (x-cache: Hit, Age header). After Be A Man apply, response may include Cache-Control from response headers policy. See 2b_be_a_man_note.txt.
+
+proof-api-list-1.txt, proof-api-list-2.txt:
+  /api/list response headers (run curl twice). Must NOT be cached: Age absent, x-cache: Error from cloudfront. Lab requirement "API must NOT cache unsafe content" is satisfied (no edge caching). Origin currently returns 500 (backend/DB); for full API correctness fix backend and re-capture to show 200.
+
+proof-public-feed-headers.txt:
+  /api/public-feed returns 200 with Cache-Control: public, s-maxage=30, max-age=0 (origin-driven caching).
+
+proof-public-feed-cache-hit.txt:
+  Optional: second request to /api/public-feed showing x-cache: Hit and Age.
