@@ -1,0 +1,69 @@
+=== Running run_all_gates.sh ===
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+sed: 2: ":a;N;$!ba;s/\n/\\n/g
+": unused label 'a;N;$!ba;s/\n/\\n/g'
+
+=== jq summary ===
+jq: parse error: Invalid string: control characters from U+0000 through U+001F must be escaped at line 26, column 63
+
+
+===== SEIR Lab 2 Gate Summary =====
+BADGE:  RED  (written to badge.txt)
+RESULT: FAIL
+JSON:   gate_result.json
+PR:     pr_comment.md
+===================================
+

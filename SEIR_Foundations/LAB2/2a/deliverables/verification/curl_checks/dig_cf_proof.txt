@@ -1,0 +1,6 @@
+; DNS verification: app.cloudyjones.xyz resolves to CloudFront IPs
+; Captured via: dig app.cloudyjones.xyz A +short
+3.170.42.48
+3.170.42.51
+3.170.42.58
+3.170.42.41

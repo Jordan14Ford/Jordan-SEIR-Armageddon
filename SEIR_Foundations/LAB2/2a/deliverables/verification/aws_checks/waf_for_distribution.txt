@@ -1,0 +1,2 @@
+WAF attachment for CloudFront: use GetDistribution (WebACLId in cloudfront_distribution.txt). get-web-acl-for-resource does not support CloudFront.
+            "WebACLId": "arn:aws:wafv2:us-east-1:583001104385:global/webacl/cloudyjones-cf-webacl01/8bdb58a8-bc6a-4830-9ca1-74bbd79ab426",

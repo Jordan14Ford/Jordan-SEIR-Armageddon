@@ -1,0 +1,28 @@
+Honors Paragraph: Origin-Driven Caching (Be A Man A)
+=====================================================
+
+Why origin-driven caching is safer for APIs:
+
+When the CDN honors origin Cache-Control headers instead of using a fixed
+TTL configured at the edge, the application retains authority over what
+gets cached and for how long. The origin can say "this public feed is safe
+to cache for 30 seconds" by sending Cache-Control: public, s-maxage=30,
+and the CDN obeys. If the origin later decides caching is no longer safe —
+maybe the endpoint now returns user-specific data — it can send
+Cache-Control: private, no-store and the CDN will stop caching immediately,
+without any infrastructure change at the edge. This is safer because
+the team that owns the application logic also controls the caching contract.
+No one has to remember to update a Terraform TTL in a different repo.
+
+When you would still disable caching entirely:
+
+You disable caching (TTL 0/0/0, no cache key) when the endpoint returns
+per-user, per-session, or write-dependent data — like /api/list returning
+a user's own notes. Even with origin-driven headers, there is a risk that
+a developer forgets to set Cache-Control: private, no-store, and now
+user A's data is served to user B from the edge. For endpoints where the
+consequences of accidental caching are severe (auth-gated, personalized,
+mutation-dependent), the safest default is to disable CDN caching at the
+infrastructure level and let every request pass through to the origin.
+The origin can always opt in later by sending explicit Cache-Control, but
+the edge should never cache by default for these paths.

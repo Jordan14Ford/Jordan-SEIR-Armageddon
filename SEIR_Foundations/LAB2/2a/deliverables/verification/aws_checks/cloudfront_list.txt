@@ -1,0 +1,274 @@
+{
+    "DistributionList": {
+        "Items": [
+            {
+                "Id": "EOCU676C9I3FL",
+                "ARN": "arn:aws:cloudfront::583001104385:distribution/EOCU676C9I3FL",
+                "ETag": "E13V1IB3VIYZZH",
+                "Status": "Deployed",
+                "LastModifiedTime": "2026-03-08T23:38:46.236000+00:00",
+                "DomainName": "d28ke8jfzy9p5x.cloudfront.net",
+                "Aliases": {
+                    "Quantity": 2,
+                    "Items": [
+                        "app.cloudyjones.xyz",
+                        "cloudyjones.xyz"
+                    ]
+                },
+                "Origins": {
+                    "Quantity": 1,
+                    "Items": [
+                        {
+                            "Id": "cloudyjones-alb-origin",
+                            "DomainName": "cloudyjones-alb01-837551053.us-east-1.elb.amazonaws.com",
+                            "OriginPath": "",
+                            "CustomHeaders": {
+                                "Quantity": 1,
+                                "Items": [
+                                    {
+                                        "HeaderName": "X-Chewbacca-Growl",
+                                        "HeaderValue": "chewbacca-growl-secret-01"
+                                    }
+                                ]
+                            },
+                            "CustomOriginConfig": {
+                                "HTTPPort": 80,
+                                "HTTPSPort": 443,
+                                "OriginProtocolPolicy": "http-only",
+                                "OriginSslProtocols": {
+                                    "Quantity": 1,
+                                    "Items": [
+                                        "TLSv1.2"
+                                    ]
+                                },
+                                "OriginReadTimeout": 30,
+                                "OriginKeepaliveTimeout": 5
+                            },
+                            "ConnectionAttempts": 3,
+                            "ConnectionTimeout": 10,
+                            "OriginShield": {
+                                "Enabled": false
+                            },
+                            "OriginAccessControlId": ""
+                        }
+                    ]
+                },
+                "OriginGroups": {
+                    "Quantity": 0
+                },
+                "DefaultCacheBehavior": {
+                    "TargetOriginId": "cloudyjones-alb-origin",
+                    "TrustedSigners": {
+                        "Enabled": false,
+                        "Quantity": 0
+                    },
+                    "TrustedKeyGroups": {
+                        "Enabled": false,
+                        "Quantity": 0
+                    },
+                    "ViewerProtocolPolicy": "redirect-to-https",
+                    "AllowedMethods": {
+                        "Quantity": 7,
+                        "Items": [
+                            "HEAD",
+                            "DELETE",
+                            "POST",
+                            "GET",
+                            "OPTIONS",
+                            "PUT",
+                            "PATCH"
+                        ],
+                        "CachedMethods": {
+                            "Quantity": 2,
+                            "Items": [
+                                "HEAD",
+                                "GET"
+                            ]
+                        }
+                    },
+                    "SmoothStreaming": false,
+                    "Compress": false,
+                    "LambdaFunctionAssociations": {
+                        "Quantity": 0
+                    },
+                    "FunctionAssociations": {
+                        "Quantity": 0
+                    },
+                    "FieldLevelEncryptionId": "",
+                    "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+                    "OriginRequestPolicyId": "b689b0a8-53d0-40ab-baf2-68738e2966ac",
+                    "GrpcConfig": {
+                        "Enabled": false
+                    }
+                },
+                "CacheBehaviors": {
+                    "Quantity": 3,
+                    "Items": [
+                        {
+                            "PathPattern": "/api/public-feed",
+                            "TargetOriginId": "cloudyjones-alb-origin",
+                            "TrustedSigners": {
+                                "Enabled": false,
+                                "Quantity": 0
+                            },
+                            "TrustedKeyGroups": {
+                                "Enabled": false,
+                                "Quantity": 0
+                            },
+                            "ViewerProtocolPolicy": "redirect-to-https",
+                            "AllowedMethods": {
+                                "Quantity": 2,
+                                "Items": [
+                                    "HEAD",
+                                    "GET"
+                                ],
+                                "CachedMethods": {
+                                    "Quantity": 2,
+                                    "Items": [
+                                        "HEAD",
+                                        "GET"
+                                    ]
+                                }
+                            },
+                            "SmoothStreaming": false,
+                            "Compress": false,
+                            "LambdaFunctionAssociations": {
+                                "Quantity": 0
+                            },
+                            "FunctionAssociations": {
+                                "Quantity": 0
+                            },
+                            "FieldLevelEncryptionId": "",
+                            "CachePolicyId": "83da9c7e-98b4-4e11-a168-04f0df8e2c65",
+                            "OriginRequestPolicyId": "67ad16e2-e07d-4b6b-ace4-55d4d56e22c9",
+                            "GrpcConfig": {
+                                "Enabled": false
+                            }
+                        },
+                        {
+                            "PathPattern": "/api/*",
+                            "TargetOriginId": "cloudyjones-alb-origin",
+                            "TrustedSigners": {
+                                "Enabled": false,
+                                "Quantity": 0
+                            },
+                            "TrustedKeyGroups": {
+                                "Enabled": false,
+                                "Quantity": 0
+                            },
+                            "ViewerProtocolPolicy": "redirect-to-https",
+                            "AllowedMethods": {
+                                "Quantity": 7,
+                                "Items": [
+                                    "HEAD",
+                                    "DELETE",
+                                    "POST",
+                                    "GET",
+                                    "OPTIONS",
+                                    "PUT",
+                                    "PATCH"
+                                ],
+                                "CachedMethods": {
+                                    "Quantity": 2,
+                                    "Items": [
+                                        "HEAD",
+                                        "GET"
+                                    ]
+                                }
+                            },
+                            "SmoothStreaming": false,
+                            "Compress": false,
+                            "LambdaFunctionAssociations": {
+                                "Quantity": 0
+                            },
+                            "FunctionAssociations": {
+                                "Quantity": 0
+                            },
+                            "FieldLevelEncryptionId": "",
+                            "CachePolicyId": "b9ee7329-315c-44ba-aef6-4106747f0548",
+                            "OriginRequestPolicyId": "67ad16e2-e07d-4b6b-ace4-55d4d56e22c9",
+                            "GrpcConfig": {
+                                "Enabled": false
+                            }
+                        },
+                        {
+                            "PathPattern": "/static/*",
+                            "TargetOriginId": "cloudyjones-alb-origin",
+                            "TrustedSigners": {
+                                "Enabled": false,
+                                "Quantity": 0
+                            },
+                            "TrustedKeyGroups": {
+                                "Enabled": false,
+                                "Quantity": 0
+                            },
+                            "ViewerProtocolPolicy": "redirect-to-https",
+                            "AllowedMethods": {
+                                "Quantity": 2,
+                                "Items": [
+                                    "HEAD",
+                                    "GET"
+                                ],
+                                "CachedMethods": {
+                                    "Quantity": 2,
+                                    "Items": [
+                                        "HEAD",
+                                        "GET"
+                                    ]
+                                }
+                            },
+                            "SmoothStreaming": false,
+                            "Compress": false,
+                            "LambdaFunctionAssociations": {
+                                "Quantity": 0
+                            },
+                            "FunctionAssociations": {
+                                "Quantity": 0
+                            },
+                            "FieldLevelEncryptionId": "",
+                            "CachePolicyId": "10f73e9d-d3c1-45e3-ac9d-456850e5c7f0",
+                            "GrpcConfig": {
+                                "Enabled": false
+                            }
+                        }
+                    ]
+                },
+                "CustomErrorResponses": {
+                    "Quantity": 0
+                },
+                "Comment": "cloudyjones CloudFront distribution",
+                "PriceClass": "PriceClass_All",
+                "Enabled": true,
+                "ViewerCertificate": {
+                    "CloudFrontDefaultCertificate": false,
+                    "ACMCertificateArn": "arn:aws:acm:us-east-1:583001104385:certificate/4d5ab9d8-dc03-405c-8129-c7f0fbb30b4f",
+                    "SSLSupportMethod": "sni-only",
+                    "MinimumProtocolVersion": "TLSv1.2_2021",
+                    "Certificate": "arn:aws:acm:us-east-1:583001104385:certificate/4d5ab9d8-dc03-405c-8129-c7f0fbb30b4f",
+                    "CertificateSource": "acm"
+                },
+                "Restrictions": {
+                    "GeoRestriction": {
+                        "RestrictionType": "none",
+                        "Quantity": 0
+                    }
+                },
+                "WebACLId": "arn:aws:wafv2:us-east-1:583001104385:global/webacl/cloudyjones-cf-webacl01/8bdb58a8-bc6a-4830-9ca1-74bbd79ab426",
+                "HttpVersion": "HTTP2",
+                "IsIPV6Enabled": true,
+                "AliasICPRecordals": [
+                    {
+                        "CNAME": "app.cloudyjones.xyz",
+                        "ICPRecordalStatus": "APPROVED"
+                    },
+                    {
+                        "CNAME": "cloudyjones.xyz",
+                        "ICPRecordalStatus": "APPROVED"
+                    }
+                ],
+                "Staging": false,
+                "ConnectionMode": "direct"
+            }
+        ]
+    }
+}
