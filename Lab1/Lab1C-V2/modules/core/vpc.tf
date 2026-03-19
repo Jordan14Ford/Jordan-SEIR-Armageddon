@@ -1,14 +1,6 @@
-# ============================================================
-# vpc.tf — custom VPC for Lab 1C private cloud architecture
-# goal: get EC2 off the default VPC and into a proper
-# network with public/private subnet separation
-# ============================================================
-
-# main VPC - using a /16 so we have plenty of room to carve subnets
-# DNS settings required for SSM Session Manager and VPC endpoints to work
 resource "aws_vpc" "cloudyjones_vpc01" {
   cidr_block           = var.vpc_cidr
-  enable_dns_hostnames = true # needed for endpoint DNS resolution
+  enable_dns_hostnames = true
   enable_dns_support   = true
 
   tags = {
@@ -17,9 +9,6 @@ resource "aws_vpc" "cloudyjones_vpc01" {
   }
 }
 
-# public subnets — ALB needs to live here to accept internet traffic
-# using count so both subnets get created from the same block
-# map_public_ip_on_launch = true so anything launched here gets a public IP
 resource "aws_subnet" "cloudyjones_public_subnets" {
   count                   = length(var.public_subnet_cidrs)
   vpc_id                  = aws_vpc.cloudyjones_vpc01.id
@@ -33,9 +22,6 @@ resource "aws_subnet" "cloudyjones_public_subnets" {
   }
 }
 
-# private subnets — EC2 lives here with no public IP
-# only way in is through the ALB → security group trust relationship
-# only way out to AWS APIs is through VPC endpoints (no NAT = no extra cost)
 resource "aws_subnet" "cloudyjones_private_subnets" {
   count                   = length(var.private_subnet_cidrs)
   vpc_id                  = aws_vpc.cloudyjones_vpc01.id
@@ -49,8 +35,6 @@ resource "aws_subnet" "cloudyjones_private_subnets" {
   }
 }
 
-# internet gateway — attached to VPC, gives public subnets a path to internet
-# without this the ALB can't receive traffic from outside
 resource "aws_internet_gateway" "cloudyjones_igw01" {
   vpc_id = aws_vpc.cloudyjones_vpc01.id
 
@@ -60,8 +44,6 @@ resource "aws_internet_gateway" "cloudyjones_igw01" {
   }
 }
 
-# public route table — any traffic going to 0.0.0.0/0 goes through IGW
-# this is what makes the public subnets actually "public"
 resource "aws_route_table" "cloudyjones_public_rt01" {
   vpc_id = aws_vpc.cloudyjones_vpc01.id
 
@@ -82,9 +64,7 @@ resource "aws_route_table_association" "cloudyjones_public_rta" {
   route_table_id = aws_route_table.cloudyjones_public_rt01.id
 }
 
-# private route table — intentionally has NO internet route
-# EC2 reaches AWS services (SSM, Secrets Manager, CloudWatch) via VPC endpoints
-# this is the whole point of the private architecture pattern
+# private route table — no internet route; EC2 uses VPC endpoints only
 resource "aws_route_table" "cloudyjones_private_rt01" {
   vpc_id = aws_vpc.cloudyjones_vpc01.id
 
@@ -100,14 +80,11 @@ resource "aws_route_table_association" "cloudyjones_private_rta" {
   route_table_id = aws_route_table.cloudyjones_private_rt01.id
 }
 
-# pull available AZs dynamically so this works in any region
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
-# NAT Gateway — toggle with var.enable_nat
-# only needed during initial pip install on private EC2;
-# set enable_nat = false for strict Bonus-A "no internet egress" posture
+# optional NAT — toggle with var.enable_nat for strict Bonus-A no-internet posture
 resource "aws_eip" "cloudyjones_nat_eip" {
   count  = var.enable_nat ? 1 : 0
   domain = "vpc"

@@ -1,0 +1,11 @@
+variable "aws_region"         { type = string }
+variable "project"            { type = string }
+variable "account_id"         { type = string }
+variable "sns_topic_arn"      { type = string }
+variable "app_log_group_name" { type = string }
+variable "app_log_group_arn"  { type = string }
+variable "waf_log_group_name" { type = string }
+variable "waf_log_group_arn"  { type = string }
+variable "db_secret_arn"      { type = string }
+variable "db_secret_name"     { type = string }
+variable "bedrock_model_id"   { type = string }

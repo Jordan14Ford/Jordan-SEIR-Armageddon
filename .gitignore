@@ -1,1 +1,21 @@
 .DS_Store
+
+# Terraform state (contains live resource IDs and secrets)
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+
+# Terraform working directories
+.terraform/
+.terraform.lock.hcl
+
+# Terraform variable files with secrets
+*.tfvars
+*.tfvars.json
+
+# Lambda build artifacts
+*.zip
+
+# Python cache
+__pycache__/
+*.pyc
