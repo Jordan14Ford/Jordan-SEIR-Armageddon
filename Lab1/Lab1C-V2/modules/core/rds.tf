@@ -1,3 +1,4 @@
+# RDS security group — MySQL only from EC2 app SG
 resource "aws_security_group" "cloudyjones_rds_sg01" {
   name        = "${var.project}-rds-sg01"
   description = "Allow MySQL from app EC2 only"
@@ -112,6 +113,23 @@ resource "aws_cloudwatch_log_group" "cloudyjones_app_log_group01" {
   }
 }
 
+# SNS topic and email subscription — shared alerting channel for all alarms
+resource "aws_sns_topic" "cloudyjones_sns_topic01" {
+  name = "${var.project}-sns-topic01"
+
+  tags = {
+    Name    = "${var.project}-sns-topic01"
+    Project = var.project
+  }
+}
+
+resource "aws_sns_topic_subscription" "cloudyjones_sns_email01" {
+  topic_arn = aws_sns_topic.cloudyjones_sns_topic01.arn
+  protocol  = "email"
+  endpoint  = var.alert_email
+}
+
+# DB connection error alarm — fires when app can't reach RDS
 resource "aws_cloudwatch_metric_alarm" "cloudyjones_db_connection_failure_alarm01" {
   alarm_name          = "${var.project}-db-connection-failure"
   comparison_operator = "GreaterThanOrEqualToThreshold"

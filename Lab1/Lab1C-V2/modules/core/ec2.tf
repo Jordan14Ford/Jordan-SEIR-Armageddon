@@ -1,13 +1,3 @@
-# ============================================================
-# ec2.tf — private EC2 instance with IAM role, security group,
-# and Flask app deployed via user_data
-#
-# key pattern: no public IP, no SSH, no key pair
-# only access method is SSM Session Manager via VPC endpoints
-# ============================================================
-
-# IAM role — EC2 assumes this role at launch
-# trust policy says only EC2 service can assume it
 resource "aws_iam_role" "cloudyjones_ec2_role01" {
   name = "${var.project}-ec2-role01"
 
@@ -26,22 +16,16 @@ resource "aws_iam_role" "cloudyjones_ec2_role01" {
   }
 }
 
-# AWS managed policy for SSM Session Manager
-# gives the instance permission to register with SSM and accept sessions
 resource "aws_iam_role_policy_attachment" "cloudyjones_ssm_policy" {
   role       = aws_iam_role.cloudyjones_ec2_role01.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-# AWS managed policy for CloudWatch agent
-# allows the instance to ship logs and metrics to CloudWatch
 resource "aws_iam_role_policy_attachment" "cloudyjones_cw_policy" {
   role       = aws_iam_role.cloudyjones_ec2_role01.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
-# least privilege: only allow access to the specific secret this app needs
-# using a wildcard on the secret name suffix because AWS appends a random string
 resource "aws_iam_role_policy" "cloudyjones_secrets_policy" {
   name = "${var.project}-secrets-policy"
   role = aws_iam_role.cloudyjones_ec2_role01.id
@@ -59,8 +43,6 @@ resource "aws_iam_role_policy" "cloudyjones_secrets_policy" {
   })
 }
 
-# least privilege: only allow reads from /lab/rds/* parameter path
-# not giving access to all SSM parameters, just what the app needs
 resource "aws_iam_role_policy" "cloudyjones_ssm_params_policy" {
   name = "${var.project}-ssm-params-policy"
   role = aws_iam_role.cloudyjones_ec2_role01.id
@@ -94,28 +76,17 @@ resource "aws_iam_role_policy" "cloudyjones_put_metric_policy" {
   })
 }
 
-# instance profile wraps the role so EC2 can use it
-# EC2 can't use an IAM role directly, needs the profile as a container
 resource "aws_iam_instance_profile" "cloudyjones_ec2_profile01" {
   name = "${var.project}-ec2-profile01"
   role = aws_iam_role.cloudyjones_ec2_role01.name
 }
 
-# EC2 security group — only allows port 80 from within the VPC
-# ALB forwards traffic here after terminating TLS
-# no SSH port open, no public access
+# EC2 SG — ingress rule (port 80 from ALB SG) is added by section-b
+# via aws_security_group_rule to avoid a circular module dependency
 resource "aws_security_group" "cloudyjones_ec2_sg01" {
   name        = "${var.project}-ec2-sg01"
   description = "Allow HTTP from VPC only - ALB forwards here"
   vpc_id      = aws_vpc.cloudyjones_vpc01.id
-
-  ingress {
-    description     = "HTTP from ALB security group only"
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [aws_security_group.cloudyjones_alb_sg01.id]
-  }
 
   egress {
     from_port   = 0
@@ -130,8 +101,6 @@ resource "aws_security_group" "cloudyjones_ec2_sg01" {
   }
 }
 
-# get the latest Amazon Linux 2023 AMI dynamically
-# this avoids hardcoding an AMI ID that gets stale over time
 data "aws_ami" "amazon_linux_2023" {
   most_recent = true
   owners      = ["amazon"]
@@ -144,10 +113,6 @@ data "aws_ami" "amazon_linux_2023" {
 
 data "aws_caller_identity" "current" {}
 
-# private EC2 — no public IP, no key pair, SSM only
-# user_data installs Flask app and sets it up as a systemd service
-# note: pip3 install will fail if run before VPC endpoints are up
-# if Flask doesn't start, check: sudo systemctl status flask-app
 resource "aws_instance" "cloudyjones_ec201_private" {
   ami                         = data.aws_ami.amazon_linux_2023.id
   instance_type               = "t3.micro"
@@ -188,11 +153,7 @@ resource "aws_instance" "cloudyjones_ec201_private" {
     def emit_db_error_metric():
         cloudwatch.put_metric_data(
             Namespace="Lab/RDSApp",
-            MetricData=[{
-                "MetricName": "DBConnectionErrors",
-                "Value": 1,
-                "Unit": "Count"
-            }]
+            MetricData=[{"MetricName": "DBConnectionErrors", "Value": 1, "Unit": "Count"}]
         )
 
     def get_ssm_values():
@@ -210,80 +171,50 @@ resource "aws_instance" "cloudyjones_ec201_private" {
     def get_secret_values():
         response = secrets.get_secret_value(SecretId=SECRET_ID)
         value = json.loads(response["SecretString"])
-        return {
-            "username": value["username"],
-            "password": value["password"],
-            "host": value.get("host"),
-            "port": int(value.get("port", 3306)),
-            "dbname": value.get("dbname", "labdb")
-        }
+        return {"username": value["username"], "password": value["password"],
+                "host": value.get("host"), "port": int(value.get("port", 3306)),
+                "dbname": value.get("dbname", "labdb")}
 
     def build_db_config():
         secret_cfg = get_secret_values()
         ssm_cfg = get_ssm_values()
-        return {
-            "host": ssm_cfg["host"] or secret_cfg["host"],
-            "port": ssm_cfg["port"] or secret_cfg["port"],
-            "dbname": ssm_cfg["dbname"] or secret_cfg["dbname"],
-            "username": secret_cfg["username"],
-            "password": secret_cfg["password"]
-        }
+        return {"host": ssm_cfg["host"] or secret_cfg["host"],
+                "port": ssm_cfg["port"] or secret_cfg["port"],
+                "dbname": ssm_cfg["dbname"] or secret_cfg["dbname"],
+                "username": secret_cfg["username"], "password": secret_cfg["password"]}
 
     def get_db_connection():
         cfg = build_db_config()
-        return pymysql.connect(
-            host=cfg["host"],
-            user=cfg["username"],
-            password=cfg["password"],
-            database=cfg["dbname"],
-            port=int(cfg["port"]),
-            autocommit=True,
-            connect_timeout=5
-        )
+        return pymysql.connect(host=cfg["host"], user=cfg["username"],
+                               password=cfg["password"], database=cfg["dbname"],
+                               port=int(cfg["port"]), autocommit=True, connect_timeout=5)
 
-    @app.route('/')
-    def home():
-        return "<h2>Lab1C app online</h2><p>/init, /add?note=hello, /list</p>"
+    @app.route('/') 
+    def home(): return "<h2>Lab1C app online</h2><p>/init, /add?note=hello, /list</p>"
 
     @app.route('/health')
-    def health():
-        return {"status": "ok"}, 200
+    def health(): return {"status": "ok"}, 200
 
     @app.route('/init')
     def init():
         cfg = build_db_config()
-        conn = pymysql.connect(
-            host=cfg["host"],
-            user=cfg["username"],
-            password=cfg["password"],
-            port=int(cfg["port"]),
-            autocommit=True
-        )
+        conn = pymysql.connect(host=cfg["host"], user=cfg["username"],
+                               password=cfg["password"], port=int(cfg["port"]), autocommit=True)
         with conn.cursor() as cur:
             cur.execute(f"CREATE DATABASE IF NOT EXISTS `{cfg['dbname']}`;")
             cur.execute(f"USE `{cfg['dbname']}`;")
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS notes (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    note VARCHAR(255) NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                );
-            """)
+            cur.execute("CREATE TABLE IF NOT EXISTS notes (id INT AUTO_INCREMENT PRIMARY KEY, note VARCHAR(255) NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);")
         conn.close()
         return {"status": "initialized", "db": cfg["dbname"]}, 200
 
     @app.route('/add')
     def add():
         note = request.args.get("note", "").strip()
-        if not note:
-            return {"error": "missing note parameter"}, 400
+        if not note: return {"error": "missing note parameter"}, 400
         try:
             connection = get_db_connection()
             with connection.cursor() as cursor:
-                cursor.execute(
-                    "INSERT INTO notes(note, created_at) VALUES(%s, CURRENT_TIMESTAMP)",
-                    (note,)
-                )
+                cursor.execute("INSERT INTO notes(note, created_at) VALUES(%s, CURRENT_TIMESTAMP)", (note,))
             connection.close()
             return {"status": "inserted", "note": note}, 200
         except Exception as exc:
@@ -305,20 +236,15 @@ resource "aws_instance" "cloudyjones_ec201_private" {
             emit_db_error_metric()
             return {"error": f"db list failed: {exc}"}, 500
 
-    # Lab 2B: /api/list — same logic as /list, explicit no-cache header (ManA)
     @app.route('/api/list')
     def api_list():
         result = list_notes()
-        if isinstance(result, tuple):
-            body, status = result
-            resp = make_response(json.dumps(body), status)
-        else:
-            resp = make_response(result)
+        body, status = result if isinstance(result, tuple) else (result, 200)
+        resp = make_response(json.dumps(body), status)
         resp.headers['Cache-Control'] = 'private, no-store'
         resp.headers['Content-Type'] = 'application/json'
         return resp
 
-    # Lab 2B: /api/public-feed — small public payload, origin drives TTL (ManA / Honors A)
     @app.route('/api/public-feed')
     def public_feed():
         resp = make_response(json.dumps({"feed": "public"}))
@@ -326,11 +252,10 @@ resource "aws_instance" "cloudyjones_ec201_private" {
         resp.headers['Content-Type'] = 'application/json'
         return resp
 
-    # Lab 2B: /static/example.txt — static asset with ETag for CloudFront revalidation (ManC)
     @app.route('/static/example.txt')
     def static_example():
-        body = "Example static content for Lab 2B.\n"
-        resp = Response(body, mimetype='text/plain')
+        from flask import Response
+        resp = Response("Example static content for Lab 2B.\n", mimetype='text/plain')
         resp.headers['ETag'] = '"df882e72414faf3025de96f74eb44ba7"'
         resp.headers['Last-Modified'] = 'Mon, 17 Mar 2026 00:00:00 GMT'
         return resp

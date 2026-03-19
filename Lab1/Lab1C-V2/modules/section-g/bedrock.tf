@@ -1,5 +1,8 @@
+# Bonus-G — Bedrock Auto-IR pipeline
+# flow: SNS alarm fires → Lambda → CW Insights queries (WAF + app) → Bedrock report → S3 + SNS notify
+
 resource "aws_s3_bucket" "cloudyjones_ir_reports_bucket01" {
-  bucket        = "${var.project}-ir-reports-${data.aws_caller_identity.current.account_id}"
+  bucket        = "${var.project}-ir-reports-${var.account_id}"
   force_destroy = true
 
   tags = {
@@ -22,11 +25,9 @@ resource "aws_iam_role" "cloudyjones_ir_lambda_role01" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Effect = "Allow"
-      Principal = {
-        Service = "lambda.amazonaws.com"
-      }
-      Action = "sts:AssumeRole"
+      Effect    = "Allow"
+      Principal = { Service = "lambda.amazonaws.com" }
+      Action    = "sts:AssumeRole"
     }]
   })
 }
@@ -38,37 +39,19 @@ resource "aws_iam_policy" "cloudyjones_ir_lambda_policy01" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
-        Action = [
-          "logs:StartQuery",
-          "logs:GetQueryResults",
-          "logs:DescribeLogStreams",
-          "logs:FilterLogEvents"
-        ]
-        Resource = [
-          "${aws_cloudwatch_log_group.cloudyjones_app_log_group01.arn}:*",
-          "${aws_cloudwatch_log_group.cloudyjones_waf_log_group01.arn}:*"
-        ]
+        Effect   = "Allow"
+        Action   = ["logs:StartQuery", "logs:GetQueryResults", "logs:DescribeLogStreams", "logs:FilterLogEvents"]
+        Resource = ["${var.app_log_group_arn}:*", "${var.waf_log_group_arn}:*"]
       },
       {
-        Effect = "Allow"
-        Action = [
-          "ssm:GetParameter",
-          "ssm:GetParameters",
-          "ssm:GetParametersByPath"
-        ]
-        Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/lab/db/*"
+        Effect   = "Allow"
+        Action   = ["ssm:GetParameter", "ssm:GetParameters", "ssm:GetParametersByPath"]
+        Resource = "arn:aws:ssm:${var.aws_region}:${var.account_id}:parameter/lab/db/*"
       },
       {
-        Effect = "Allow"
-        Action = [
-          "secretsmanager:GetSecretValue",
-          "secretsmanager:DescribeSecret"
-        ]
-        Resource = [
-          aws_secretsmanager_secret.cloudyjones_db_secret01.arn,
-          "${aws_secretsmanager_secret.cloudyjones_db_secret01.arn}*"
-        ]
+        Effect   = "Allow"
+        Action   = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
+        Resource = [var.db_secret_arn, "${var.db_secret_arn}*"]
       },
       {
         Effect   = "Allow"
@@ -78,7 +61,7 @@ resource "aws_iam_policy" "cloudyjones_ir_lambda_policy01" {
       {
         Effect   = "Allow"
         Action   = ["sns:Publish"]
-        Resource = aws_sns_topic.cloudyjones_sns_topic01.arn
+        Resource = var.sns_topic_arn
       },
       {
         Effect   = "Allow"
@@ -106,30 +89,29 @@ data "archive_file" "cloudyjones_ir_lambda_zip01" {
 }
 
 resource "aws_lambda_function" "cloudyjones_ir_lambda01" {
-  function_name = "${var.project}-ir-autoreport01"
-  role          = aws_iam_role.cloudyjones_ir_lambda_role01.arn
-  runtime       = "python3.12"
-  handler       = "handler.lambda_handler"
-  timeout       = 30
-
+  function_name    = "${var.project}-ir-autoreport01"
+  role             = aws_iam_role.cloudyjones_ir_lambda_role01.arn
+  runtime          = "python3.12"
+  handler          = "handler.lambda_handler"
+  timeout          = 30
   filename         = data.archive_file.cloudyjones_ir_lambda_zip01.output_path
   source_code_hash = data.archive_file.cloudyjones_ir_lambda_zip01.output_base64sha256
 
   environment {
     variables = {
       REPORT_BUCKET    = aws_s3_bucket.cloudyjones_ir_reports_bucket01.bucket
-      APP_LOG_GROUP    = aws_cloudwatch_log_group.cloudyjones_app_log_group01.name
-      WAF_LOG_GROUP    = aws_cloudwatch_log_group.cloudyjones_waf_log_group01.name
-      SECRET_ID        = aws_secretsmanager_secret.cloudyjones_db_secret01.name
+      APP_LOG_GROUP    = var.app_log_group_name
+      WAF_LOG_GROUP    = var.waf_log_group_name
+      SECRET_ID        = var.db_secret_name
       SSM_PARAM_PATH   = "/lab/db/"
       BEDROCK_MODEL_ID = var.bedrock_model_id
-      SNS_TOPIC_ARN    = aws_sns_topic.cloudyjones_sns_topic01.arn
+      SNS_TOPIC_ARN    = var.sns_topic_arn
     }
   }
 }
 
 resource "aws_sns_topic_subscription" "cloudyjones_ir_lambda_sub01" {
-  topic_arn = aws_sns_topic.cloudyjones_sns_topic01.arn
+  topic_arn = var.sns_topic_arn
   protocol  = "lambda"
   endpoint  = aws_lambda_function.cloudyjones_ir_lambda01.arn
 }
@@ -139,5 +121,5 @@ resource "aws_lambda_permission" "cloudyjones_allow_sns_invoke01" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.cloudyjones_ir_lambda01.function_name
   principal     = "sns.amazonaws.com"
-  source_arn    = aws_sns_topic.cloudyjones_sns_topic01.arn
+  source_arn    = var.sns_topic_arn
 }

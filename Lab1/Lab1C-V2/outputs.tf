@@ -1,67 +1,30 @@
-output "vpc_id" {
-  value = aws_vpc.cloudyjones_vpc01.id
-}
+# ── Core ────────────────────────────────────────────────────────
+output "vpc_id"                { value = module.core.vpc_id }
+output "private_ec2_instance_id" { value = module.core.ec2_instance_id }
+output "rds_endpoint"          { value = module.core.rds_endpoint }
+output "rds_port"              { value = module.core.rds_port }
+output "db_secret_name"        { value = module.core.db_secret_name }
+output "db_alarm_name"         { value = module.core.db_alarm_name }
+output "sns_topic_arn"         { value = module.core.sns_topic_arn }
+output "app_log_group_name"    { value = module.core.app_log_group_name }
 
-output "private_ec2_instance_id" {
-  value = aws_instance.cloudyjones_ec201_private.id
-}
+# ── Bonus-A ─────────────────────────────────────────────────────
+output "monitoring_endpoint_id" { value = module.section_a.monitoring_endpoint_id }
 
-output "rds_endpoint" {
-  value = aws_db_instance.cloudyjones_rds01.address
-}
+# ── Bonus-B ─────────────────────────────────────────────────────
+output "alb_dns_name"          { value = module.section_b.alb_dns_name }
 
-output "rds_port" {
-  value = aws_db_instance.cloudyjones_rds01.port
-}
+# ── Bonus-C ─────────────────────────────────────────────────────
+output "app_url"               { value = module.section_c.app_url_https }
+output "route53_zone_id"       { value = module.section_c.zone_id }
+output "route53_nameservers"   { value = module.section_c.nameservers }
 
-output "db_secret_name" {
-  value = aws_secretsmanager_secret.cloudyjones_db_secret01.name
-}
+# ── Bonus-D ─────────────────────────────────────────────────────
+output "apex_url"              { value = module.section_d.apex_url_https }
+output "alb_logs_bucket"       { value = module.section_d.alb_logs_bucket_name }
 
-output "db_alarm_name" {
-  value = aws_cloudwatch_metric_alarm.cloudyjones_db_connection_failure_alarm01.alarm_name
-}
+# ── Bonus-E ─────────────────────────────────────────────────────
+output "waf_log_group_name"    { value = module.section_e.waf_log_group_name }
 
-output "sns_topic_arn" {
-  value = aws_sns_topic.cloudyjones_sns_topic01.arn
-}
-
-output "app_log_group_name" {
-  value = aws_cloudwatch_log_group.cloudyjones_app_log_group01.name
-}
-
-output "waf_log_group_name" {
-  value = aws_cloudwatch_log_group.cloudyjones_waf_log_group01.name
-}
-
-output "ir_reports_bucket" {
-  value = aws_s3_bucket.cloudyjones_ir_reports_bucket01.bucket
-}
-
-output "alb_dns_name" {
-  value = aws_lb.cloudyjones_alb01.dns_name
-}
-
-output "app_url" {
-  value = "https://${var.app_subdomain}.${var.domain_name}"
-}
-
-output "apex_url" {
-  value = "https://${var.domain_name}"
-}
-
-output "alb_logs_bucket" {
-  value = aws_s3_bucket.cloudyjones_alb_logs_bucket01.bucket
-}
-
-output "route53_zone_id" {
-  value = aws_route53_zone.cloudyjones_zone01.zone_id
-}
-
-output "route53_nameservers" {
-  value = aws_route53_zone.cloudyjones_zone01.name_servers
-}
-
-output "monitoring_endpoint_id" {
-  value = aws_vpc_endpoint.cloudyjones_monitoring.id
-}
+# ── Bonus-G ─────────────────────────────────────────────────────
+output "ir_reports_bucket"     { value = module.section_g.ir_reports_bucket }
